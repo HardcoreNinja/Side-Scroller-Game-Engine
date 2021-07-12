@@ -19,6 +19,9 @@
     <Filter Include="Source Files\Game">
       <UniqueIdentifier>{054ef627-7c11-414f-aa25-4e6edba41a2d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics Settings">
+      <UniqueIdentifier>{32336e65-b4cb-4b3f-974f-2518fddbb7f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -26,6 +29,9 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Source Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsSettings.h">
+      <Filter>Source Files\Graphics Settings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -36,7 +42,10 @@
       <Filter>Source Files\Main</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsSettings.cpp">
+      <Filter>Source Files\Graphics Settings</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

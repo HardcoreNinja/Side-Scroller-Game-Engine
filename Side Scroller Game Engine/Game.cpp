@@ -2,16 +2,31 @@
 #include "Game.h"
 
 /*Initializers*/
+void Game::initGraphicsSettings()
+{
+    this->graphicsSettings = std::make_unique<GraphicsSettings>();
+
+    this->graphicsSettings->loadFromFile();
+}
 void Game::initWindow()
 {
-	this->window = std::make_unique<sf::RenderWindow>(sf::VideoMode(800, 600), "Game Engine");
+    auto style = this->graphicsSettings->getFullScreen() ? sf::Style::Fullscreen : sf::Style::Default;
+    
+    this->window = std::make_unique<sf::RenderWindow>(
+        this->graphicsSettings->getVideoMode(),
+        this->graphicsSettings->getTitle(),
+        style, 
+        this->graphicsSettings->getContextSettings()
+        );
 
-    this->window->setFramerateLimit(120);
+    this->window->setVerticalSyncEnabled(this->graphicsSettings->getVSync());
+    this->window->setFramerateLimit(this->graphicsSettings->getFrameRateLimit());
 }
 
 /*Constructor & Destructor*/
 Game::Game()
 {
+    this->initGraphicsSettings();
 	this->initWindow();
 }
 Game::~Game()
