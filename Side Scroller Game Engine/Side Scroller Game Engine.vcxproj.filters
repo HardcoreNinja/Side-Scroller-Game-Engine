@@ -16,10 +16,16 @@
     <Filter Include="Source Files\Main">
       <UniqueIdentifier>{b9cc23c2-20d8-42c5-ac14-b0e8a1d53eab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Game">
+      <UniqueIdentifier>{054ef627-7c11-414f-aa25-4e6edba41a2d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Source Files\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +34,9 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
