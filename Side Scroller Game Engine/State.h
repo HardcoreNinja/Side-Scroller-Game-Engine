@@ -1,10 +1,12 @@
 #ifndef STATE_H
 #define STATE_H
 #include "GraphicsSettings.h"
+#include "GUI.h"
 
 /*Class Forward Declarations*/
 class State;
 class GraphicsSettings;
+class Button;
 class sf::RenderTarget;
 class sf::RenderWindow;
 class sf::RectangleShape;
@@ -19,10 +21,11 @@ struct GameDetails
 	}
 
 	std::map<std::string, int>& supportedKeys; 
-
 	GraphicsSettings* graphicsSettings; 
 	sf::RenderWindow* window;
 	std::vector<std::unique_ptr<State>>* states;
+	sf::Event* event;
+	sf::Font* font;
 };
 
 class State
@@ -36,13 +39,33 @@ protected:
 
 	/*Background Variables*/
 	sf::RectangleShape background; 
-	sf::Texture backgroundTexture; 
+	sf::Texture backgroundTexture;
+
+	/*User Input Variables*/
+	sf::Vector2i mousePositionDesktop;
+	sf::Vector2i mousePositionWindow; 
+
+	/*Buttons*/
+	std::unique_ptr<GUI::Button> button; 
+	std::map<std::string, std::unique_ptr<GUI::Button>> buttonMap;
+
+	/*End State Bool*/
+	bool endState;
+
 public:
 	/*Constructor & Destructor*/
 	State(GameDetails* game_details);
 	virtual ~State();
 
+	/*Getters*/
+	bool getEndState();
+
+	/*Setters*/
+	void setEndStateTrue();
+
 	/*Update Functions*/
+	void updateMousePosition();
+	void updateButtonMap();
 	virtual void update(const float& dt) = 0;
 
 	/*Render Functions*/

@@ -37,6 +37,9 @@
     <Filter Include="Source Files\States">
       <UniqueIdentifier>{1f62300b-26ff-4a57-8ed0-a9d15990e3f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{54cc2a89-0da7-4f46-8589-9a3de3a04ca2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -52,6 +55,12 @@
       <Filter>Source Files\Base Classes</Filter>
     </ClInclude>
     <ClInclude Include="MainMenu.h">
+      <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI.h">
+      <Filter>Source Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
       <Filter>Source Files\States</Filter>
     </ClInclude>
   </ItemGroup>
@@ -72,6 +81,12 @@
       <Filter>Source Files\Base Classes</Filter>
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings.cpp">
       <Filter>Source Files\States</Filter>
     </ClCompile>
   </ItemGroup>

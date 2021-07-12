@@ -151,13 +151,16 @@
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="GraphicsSettings.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="State.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GraphicsSettings.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Header.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Header.h</PrecompiledHeaderFile>
@@ -166,6 +169,7 @@
     </ClCompile>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="Settings.cpp" />
     <ClCompile Include="State.cpp" />
   </ItemGroup>
   <ItemGroup>

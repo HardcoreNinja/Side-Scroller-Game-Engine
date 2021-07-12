@@ -28,6 +28,12 @@ private:
 	/*Window*/
 	std::unique_ptr<sf::RenderWindow> window;
 
+	/*Event*/
+	std::unique_ptr<sf::Event> event;
+
+	/*Font*/
+	std::unique_ptr<sf::Font> font; 
+
 	/*Delta Time Variables*/
 	float dt; 
 	sf::Clock dtClock;
@@ -36,6 +42,8 @@ private:
 	void initSupportedKey();
 	void initGraphicsSettings();
 	void initWindow();
+	void initEvent();
+	void initFont();
 	void initGameDetails();
 	void initStates();
 
@@ -46,6 +54,7 @@ public:
 
 	/*Update Functions*/
 	void updateDeltaTime();
+	void updateEvent();
 	void update();
 
 	/*Render Functions*/

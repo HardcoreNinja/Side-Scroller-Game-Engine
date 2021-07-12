@@ -1,29 +1,18 @@
-#ifndef MAIN_MENU_H
-#define MAIN_MENU_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 #include "State.h"
-#include "Settings.h"
 
-/*Class Forward Declarations*/
-class State;
-class Settings;
-class GraphicsSettings;
-class Button;
-class sf::RenderTarget;
-class sf::RectangleShape; 
-class sf::Texture;
-class sf::Color;
-
-class MainMenu :
+class Settings :
     public State
 {
 private:
     /*Initializers*/
     void initBackground();
     void initButtons();
-public: 
+public:
     /*Constructor & Destructor*/
-    MainMenu(GameDetails* game_details);
-    virtual ~MainMenu();
+    Settings(GameDetails* game_details);
+    virtual ~Settings();
 
     /*Update Functions*/
     void updateButtons();

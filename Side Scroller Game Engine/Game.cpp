@@ -42,11 +42,24 @@ void Game::initWindow()
     this->window->setVerticalSyncEnabled(this->graphicsSettings->getVSync());
     this->window->setFramerateLimit(this->graphicsSettings->getFrameRateLimit());
 }
+void Game::initEvent()
+{
+    this->event = std::make_unique<sf::Event>();
+}
+void Game::initFont()
+{
+    this->font = std::make_unique<sf::Font>();
+
+    if (!this->font->loadFromFile("Resources/Font/font.ttf"))
+        throw ("ERROR::GAME::FAILED_TO_LOAD::font.ttf");
+}
 void Game::initGameDetails()
 {
     this->gameDetails.graphicsSettings = this->graphicsSettings.get();
     this->gameDetails.window = this->window.get(); 
     this->gameDetails.states = &this->states;
+    this->gameDetails.event = this->event.get();
+    this->gameDetails.font = this->font.get();
 }
 void Game::initStates()
 {
@@ -60,6 +73,8 @@ Game::Game()
     this->initSupportedKey();
     this->initGraphicsSettings();
 	this->initWindow();
+    this->initEvent();
+    this->initFont();
     this->initGameDetails();
     this->initStates();
 }
@@ -74,20 +89,24 @@ void Game::updateDeltaTime()
 
     //std::cout << "Delta Time: " << this->dt << '\n';
 }
+void Game::updateEvent()
+{
+    while (this->window->pollEvent(*this->event))
+    {
+        if (this->event->type == sf::Event::Closed)
+            this->window->close();
+    }
+}
 void Game::update()
 {
     this->updateDeltaTime();
+    this->updateEvent();
     if (!this->states.empty())
     {
-        sf::Event event;
-        while (this->window->pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                this->window->close();
-
-        }
-
         this->states.back()->update(this->dt);
+
+        if (this->states.back()->getEndState())
+            this->states.pop_back();
     }
 }
 
