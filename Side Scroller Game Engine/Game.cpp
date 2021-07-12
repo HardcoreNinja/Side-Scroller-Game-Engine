@@ -18,8 +18,9 @@ void Game::initSupportedKey()
     }
     ifs.close();
 
+    /*Debug
     for (auto& i : this->supportedKeys)
-        std::cout << i.first << " " << i.second << '\n';
+        std::cout << i.first << " " << i.second << '\n';*/
 }
 void Game::initGraphicsSettings()
 {
@@ -41,13 +42,26 @@ void Game::initWindow()
     this->window->setVerticalSyncEnabled(this->graphicsSettings->getVSync());
     this->window->setFramerateLimit(this->graphicsSettings->getFrameRateLimit());
 }
+void Game::initGameDetails()
+{
+    this->gameDetails.graphicsSettings = this->graphicsSettings.get();
+    this->gameDetails.window = this->window.get(); 
+    this->gameDetails.states = &this->states;
+}
+void Game::initStates()
+{
+    this->states.push_back(std::make_unique<MainMenu>(&this->gameDetails));
+}
 
 /*Constructor & Destructor*/
 Game::Game()
+    : gameDetails(this->supportedKeys)
 {
     this->initSupportedKey();
     this->initGraphicsSettings();
 	this->initWindow();
+    this->initGameDetails();
+    this->initStates();
 }
 Game::~Game()
 {
@@ -58,16 +72,22 @@ void Game::updateDeltaTime()
 {
 	this->dt = this->dtClock.restart().asSeconds();
 
-    std::cout << "Delta Time: " << this->dt << '\n';
+    //std::cout << "Delta Time: " << this->dt << '\n';
 }
 void Game::update()
 {
     this->updateDeltaTime();
-    sf::Event event;
-    while (this->window->pollEvent(event))
+    if (!this->states.empty())
     {
-        if (event.type == sf::Event::Closed)
-            this->window->close();
+        sf::Event event;
+        while (this->window->pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                this->window->close();
+
+        }
+
+        this->states.back()->update(this->dt);
     }
 }
 
@@ -75,8 +95,9 @@ void Game::update()
 void Game::render()
 {
     this->window->clear(sf::Color::Magenta);
-
-   this->window->display();
+    if(!this->states.empty())
+    this->states.back()->render();
+    this->window->display();
 }
 
 /*Run Function*/

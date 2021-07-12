@@ -152,6 +152,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GraphicsSettings.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="State.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
@@ -163,6 +165,12 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Header.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
+    <ClCompile Include="State.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Config\graphics_settings.ini" />
+    <None Include="Config\supported_keys.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

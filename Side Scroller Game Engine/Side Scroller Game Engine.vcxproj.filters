@@ -22,6 +22,21 @@
     <Filter Include="Source Files\Graphics Settings">
       <UniqueIdentifier>{32336e65-b4cb-4b3f-974f-2518fddbb7f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Config">
+      <UniqueIdentifier>{5e2e130b-b680-4f51-a202-5fd3c7411245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Config\Supported Keys">
+      <UniqueIdentifier>{6064e94c-2de9-4f59-8733-a99e469d1ef5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Config\Graphics Settings">
+      <UniqueIdentifier>{d92b21fb-35f7-4495-b08d-d2994b0b7c81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Base Classes">
+      <UniqueIdentifier>{5d891dcb-192b-4845-be62-882b48694faf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\States">
+      <UniqueIdentifier>{1f62300b-26ff-4a57-8ed0-a9d15990e3f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -32,6 +47,12 @@
     </ClInclude>
     <ClInclude Include="GraphicsSettings.h">
       <Filter>Source Files\Graphics Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>Source Files\Base Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Source Files\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -47,5 +68,19 @@
     <ClCompile Include="GraphicsSettings.cpp">
       <Filter>Source Files\Graphics Settings</Filter>
     </ClCompile>
+    <ClCompile Include="State.cpp">
+      <Filter>Source Files\Base Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Config\graphics_settings.ini">
+      <Filter>Resource Files\Config\Graphics Settings</Filter>
+    </None>
+    <None Include="Config\supported_keys.ini">
+      <Filter>Resource Files\Config\Supported Keys</Filter>
+    </None>
   </ItemGroup>
 </Project>
