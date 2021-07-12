@@ -11,6 +11,9 @@ class sf::Color;
 class Game
 {
 private:
+	/*Supported Keys*/
+	std::map<std::string, int> supportedKeys;
+
 	/*Graphics Settings*/
 	std::unique_ptr<GraphicsSettings> graphicsSettings;
 
@@ -22,6 +25,7 @@ private:
 	sf::Clock dtClock;
 
 	/*Initializers*/
+	void initSupportedKey();
 	void initGraphicsSettings();
 	void initWindow();
 public:

@@ -2,6 +2,25 @@
 #include "Game.h"
 
 /*Initializers*/
+void Game::initSupportedKey()
+{
+    std::ifstream ifs("Config/supported_keys.ini"); 
+    std::string key = "";
+    int keyValue = 0;
+
+    if (ifs.is_open())
+    {
+        while (ifs >> key)
+        {
+            this->supportedKeys[key] = keyValue; 
+            keyValue++;
+        }
+    }
+    ifs.close();
+
+    for (auto& i : this->supportedKeys)
+        std::cout << i.first << " " << i.second << '\n';
+}
 void Game::initGraphicsSettings()
 {
     this->graphicsSettings = std::make_unique<GraphicsSettings>();
@@ -26,6 +45,7 @@ void Game::initWindow()
 /*Constructor & Destructor*/
 Game::Game()
 {
+    this->initSupportedKey();
     this->initGraphicsSettings();
 	this->initWindow();
 }
