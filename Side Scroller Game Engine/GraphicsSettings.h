@@ -30,6 +30,12 @@ public:
 	const unsigned int getFrameRateLimit();
 	const sf::ContextSettings getContextSettings();
 
+	/*Setters*/
+	void setVideoMode(const sf::VideoMode video_mode);
+	void setFullscreen(const bool full_screen);
+	void setVSync(const bool vsync);
+	void setAntiAliasingLevel(const unsigned int anti_aliasing_level);
+
 	/*Save & Load Functions*/
 	void saveToFile();
 	void loadFromFile();

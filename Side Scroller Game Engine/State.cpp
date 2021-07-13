@@ -36,6 +36,25 @@ bool State::getEndState()
 }
 
 /*Setters*/
+void State::setWindow()
+{
+	auto style = this->gameDetails->graphicsSettings->getFullScreen() ? sf::Style::Fullscreen : sf::Style::Default;
+
+	this->gameDetails->window->create(
+		this->gameDetails->graphicsSettings->getVideoMode(),
+		this->gameDetails->graphicsSettings->getTitle(),
+		style,
+		this->gameDetails->graphicsSettings->getContextSettings()
+		);
+
+	this->gameDetails->window->setVerticalSyncEnabled(this->gameDetails->graphicsSettings->getVSync());
+	this->gameDetails->window->setFramerateLimit(this->gameDetails->graphicsSettings->getFrameRateLimit());
+}
+void State::setStateInitializations()
+{
+	for (auto& i : *this->gameDetails->states)
+		i->setInitializers();
+}
 void State::setEndStateTrue()
 {
 	this->endState = true;
@@ -59,4 +78,3 @@ void State::updateInputTime(const float& dt)
 
 	//std::cout << "Input Time: " << this->inputTime << '\n';
 }
-

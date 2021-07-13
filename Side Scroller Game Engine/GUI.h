@@ -84,7 +84,6 @@ namespace GUI
 		const short getID() const;
 		const std::string getString() const;
 
-
 		/*Setters*/
 		void setID(const short id);
 		void setString(std::string string);
@@ -139,8 +138,12 @@ namespace GUI
 		virtual ~DropDown();
 
 		/*Getters*/
+		const short getActiveElementID() const;
+		bool getShow();
 		bool getInputTime();
 
+		/*Setters*/
+		void setActiveElementID(const short id);
 
 		/*Update Functions*/
 		void updateInputTime(const float& dt);
@@ -148,7 +151,6 @@ namespace GUI
 
 		/*Render Functions*/
 		void render(sf::RenderTarget& target);
-
 	};
 }
 #endif

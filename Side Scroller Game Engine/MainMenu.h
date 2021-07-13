@@ -25,6 +25,9 @@ public:
     MainMenu(GameDetails* game_details);
     virtual ~MainMenu();
 
+    /*Setters*/
+    void setInitializers();
+
     /*Update Functions*/
     void updateButtons();
     void update(const float& dt);

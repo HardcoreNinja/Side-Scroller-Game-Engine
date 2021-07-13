@@ -10,6 +10,15 @@ private:
 
     std::vector<sf::VideoMode> videoModes;
 
+    bool openFullscreenDropdown; 
+    bool openVSyncDropdown;
+    bool openAntiAliasingDropdown;
+
+    short resolutionID; 
+    short fullscreenID;
+    short vSyncID;
+    short antiAliasingID;
+
     /*Initializers*/
     void initVariables();
     void initBackground();
@@ -21,10 +30,17 @@ public:
     Settings(GameDetails* game_details);
     virtual ~Settings();
 
+    /*Setters*/
+    void setInitializers();
+
     /*Update Functions*/
     void updateDropdowns(const float& dt);
     void updateButtons();
     void update(const float& dt);
+
+    /*Save & Load Active Element IDs*/
+    void saveIDToFile();
+    void loadIDFromFile();
 
     /*Render Functions*/
     void renderBackground(sf::RenderTarget& target);

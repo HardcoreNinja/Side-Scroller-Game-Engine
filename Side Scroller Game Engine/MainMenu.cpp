@@ -53,6 +53,13 @@ MainMenu::~MainMenu()
 {
 }
 
+/*Setters*/
+void MainMenu::setInitializers()
+{
+	this->initBackground();
+	this->initButtons();
+}
+
 /*Update Functions*/
 void MainMenu::updateButtons()
 {

@@ -49,6 +49,9 @@ void GUI::Button::initVariables(
 	this->text.setOrigin(this->text.getGlobalBounds().width / 2.f, this->text.getGlobalBounds().height / 2.f);
 	this->text.setPosition(this->buttonShape.getPosition().x, this->buttonShape.getPosition().y - static_cast<float>(this->text.getCharacterSize()) / 4.f);
 	this->text.setFillColor(this->textIdleColor);
+
+	/*ID*/
+	this->id = id;
 }
 
 /*Constructor & Destructor*/
@@ -153,7 +156,6 @@ void GUI::Button::updateButtonState(const sf::Vector2i& mouse_window_position)
 		throw ("ERROR::GUI::BUTTON::INVALID_SWITCH_ENTRY::void GUI::Button::updateButtonState(sf::Vector2i mouse_window_position)");
 		break;
 	}
-
 }
 void GUI::Button::update(const sf::Vector2i& mouse_window_position)
 {
@@ -237,6 +239,14 @@ GUI::DropDown::~DropDown()
 }
 
 /*Getters*/
+const short GUI::DropDown::getActiveElementID() const
+{
+	return this->activeElement->getID();
+}
+bool GUI::DropDown::getShow()
+{
+	return this->show;
+}
 bool GUI::DropDown::getInputTime()
 {
 	if (this->inputTime >= this->maxInputTime)
@@ -246,6 +256,13 @@ bool GUI::DropDown::getInputTime()
 	}
 
 	return false;
+}
+
+/*Setters*/
+void GUI::DropDown::setActiveElementID(const short id)
+{
+	this->activeElement->setID(id);
+	this->activeElement->setString(this->buttonVector[id]->getString());
 }
 
 /*Update Functions*/

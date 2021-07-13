@@ -47,6 +47,24 @@ const sf::ContextSettings GraphicsSettings::getContextSettings()
 	return this->contextSettings;
 }
 
+/*Setters*/
+void GraphicsSettings::setVideoMode(const sf::VideoMode video_mode)
+{
+	this->videoMode = video_mode;
+}
+void GraphicsSettings::setFullscreen(const bool full_screen)
+{
+	this->fullScreen = full_screen;
+}
+void GraphicsSettings::setVSync(const bool vsync)
+{
+	this->vSync = vsync;
+}
+void GraphicsSettings::setAntiAliasingLevel(const unsigned int anti_aliasing_level)
+{
+	this->contextSettings.antialiasingLevel = anti_aliasing_level;
+}
+
 /*Save & Load Functions*/
 void GraphicsSettings::saveToFile()
 {

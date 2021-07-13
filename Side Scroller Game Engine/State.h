@@ -71,6 +71,9 @@ public:
 
 	/*Setters*/
 	void setEndStateTrue();
+	void setWindow();
+	void setStateInitializations();
+	virtual void setInitializers() = 0;
 
 	/*Update Functions*/
 	void updateMousePosition();
