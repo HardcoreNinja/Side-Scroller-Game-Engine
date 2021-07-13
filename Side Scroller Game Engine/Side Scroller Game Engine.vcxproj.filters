@@ -52,6 +52,9 @@
     <Filter Include="Resource Files\Config\Key Binds\Settings">
       <UniqueIdentifier>{ecb3bd0c-cafb-458d-8907-2ab78f1fb593}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Tile Map">
+      <UniqueIdentifier>{ebf378c5-c2e8-4f0a-a1ec-efdf91b7dc96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -74,6 +77,9 @@
     </ClInclude>
     <ClInclude Include="Settings.h">
       <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>Source Files\Tile Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +106,9 @@
     </ClCompile>
     <ClCompile Include="Settings.cpp">
       <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Source Files\Tile Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

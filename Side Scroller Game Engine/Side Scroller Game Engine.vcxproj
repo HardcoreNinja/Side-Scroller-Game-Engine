@@ -156,6 +156,7 @@
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="TileMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="State.cpp" />
+    <ClCompile Include="TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\active_element_id.ini" />
