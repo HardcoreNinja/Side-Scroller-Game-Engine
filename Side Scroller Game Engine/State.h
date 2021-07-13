@@ -49,6 +49,14 @@ protected:
 	std::unique_ptr<GUI::Button> button; 
 	std::map<std::string, std::unique_ptr<GUI::Button>> buttonMap;
 
+	/*DropDowns*/
+	std::unique_ptr<GUI::DropDown> dropdown; 
+	std::map<std::string, std::unique_ptr<GUI::DropDown>> dropdownMap;
+
+	/*Input Time*/
+	float inputTime;
+	float maxInputTime; 
+
 	/*End State Bool*/
 	bool endState;
 
@@ -58,6 +66,7 @@ public:
 	virtual ~State();
 
 	/*Getters*/
+	bool getInputTime();
 	bool getEndState();
 
 	/*Setters*/
@@ -66,6 +75,7 @@ public:
 	/*Update Functions*/
 	void updateMousePosition();
 	void updateButtonMap();
+	void updateInputTime(const float& dt);
 	virtual void update(const float& dt) = 0;
 
 	/*Render Functions*/

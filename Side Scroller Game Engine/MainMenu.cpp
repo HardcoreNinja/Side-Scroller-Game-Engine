@@ -27,14 +27,16 @@ void MainMenu::initBackground()
 void MainMenu::initButtons()
 {
 	this->button = std::make_unique<GUI::Button>(
-		sf::Vector2f(static_cast<float>(this->gameDetails->window->getSize().x) / 2.f, static_cast<float>(this->gameDetails->window->getSize().y) / 2.f), //Button Position
-		sf::Vector2f(100.f, 50.f),
-		this->gameDetails->font,
-		"settings",
-		50,
-		sf::Color::White,
-		sf::Color::Blue,
-		sf::Color::Red
+		sf::Vector2f(
+			static_cast<float>(this->gameDetails->window->getSize().x) / 2.f, 
+			static_cast<float>(this->gameDetails->window->getSize().y) / 2.f), //Button Position
+		sf::Vector2f(400.f, 150.f),                                            //Button Size
+		this->gameDetails->font,                                               //Text Font
+		"settings",                                                            //String                     
+		50,                                                                    //Character Size 
+		sf::Color::White,                                                      //Text Idle Color
+		sf::Color::Blue,                                                       //Text Hover Color
+		sf::Color::Red                                                         //Text Click Color
 		); 
 
 	this->buttonMap["Settings"] = std::move(this->button);
@@ -54,7 +56,7 @@ MainMenu::~MainMenu()
 /*Update Functions*/
 void MainMenu::updateButtons()
 {
-	if (this->buttonMap["Settings"]->getButtonClickState())
+	if (this->buttonMap["Settings"]->getButtonClickState() && this->getInputTime())
 		this->gameDetails->states->push_back(std::make_unique<Settings>(this->gameDetails));
 }
 void MainMenu::update(const float& dt)
@@ -62,6 +64,7 @@ void MainMenu::update(const float& dt)
 	this->updateMousePosition();
 	this->updateButtonMap();
 	this->updateButtons();
+	this->updateInputTime(dt);
 }
 
 /*Render Functions*/
