@@ -40,6 +40,18 @@
     <Filter Include="Source Files\GUI">
       <UniqueIdentifier>{54cc2a89-0da7-4f46-8589-9a3de3a04ca2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Config\Active Element IDs">
+      <UniqueIdentifier>{07d4c190-ec2f-4116-86cd-6edeb1c4e358}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Config\Key Binds">
+      <UniqueIdentifier>{ff2ce886-3ee7-4d4e-a4fe-4f6cf2820d8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Config\Key Binds\Main Menu">
+      <UniqueIdentifier>{e9e5a65d-4337-4679-acf9-9eefe6129af0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Config\Key Binds\Settings">
+      <UniqueIdentifier>{ecb3bd0c-cafb-458d-8907-2ab78f1fb593}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -96,6 +108,15 @@
     </None>
     <None Include="Config\supported_keys.ini">
       <Filter>Resource Files\Config\Supported Keys</Filter>
+    </None>
+    <None Include="Config\active_element_id.ini">
+      <Filter>Resource Files\Config\Active Element IDs</Filter>
+    </None>
+    <None Include="Config\main_menu_key_binds.ini">
+      <Filter>Resource Files\Config\Key Binds\Main Menu</Filter>
+    </None>
+    <None Include="Config\settings_key_binds.ini">
+      <Filter>Resource Files\Config\Key Binds\Settings</Filter>
     </None>
   </ItemGroup>
 </Project>

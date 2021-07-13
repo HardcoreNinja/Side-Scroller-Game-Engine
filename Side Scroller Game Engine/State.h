@@ -53,6 +53,9 @@ protected:
 	std::unique_ptr<GUI::DropDown> dropdown; 
 	std::map<std::string, std::unique_ptr<GUI::DropDown>> dropdownMap;
 
+	/*Key Binds*/
+	std::map<std::string, int> keyBindMap;
+
 	/*Input Time*/
 	float inputTime;
 	float maxInputTime; 

@@ -22,6 +22,7 @@ private:
     /*Initializers*/
     void initVariables();
     void initBackground();
+    void initKeyBinds();
     void initTitles();
     void initButtons();
     void initDropDowns();
@@ -34,6 +35,7 @@ public:
     void setInitializers();
 
     /*Update Functions*/
+    void updateUserInput();
     void updateDropdowns(const float& dt);
     void updateButtons();
     void update(const float& dt);

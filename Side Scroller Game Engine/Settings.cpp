@@ -33,6 +33,21 @@ void Settings::initBackground()
 
 	this->background.setTexture(&this->backgroundTexture);
 }
+void Settings::initKeyBinds()
+{
+	std::ifstream ifs("Config/settings_key_binds.ini");
+
+	std::string keyBindKey = "";
+	std::string supportedKeysKey = "";
+
+	if (ifs.is_open())
+	{
+		while (ifs >> keyBindKey >> supportedKeysKey)
+			this->keyBindMap[keyBindKey] = this->gameDetails->supportedKeys[supportedKeysKey];
+	}
+
+	ifs.close();
+}
 void Settings::initTitles()
 {
 	float positionX = 20.f;
@@ -162,6 +177,7 @@ Settings::Settings(GameDetails* game_details)
 {
 	this->initVariables();
 	this->initBackground();
+	this->initKeyBinds();
 	this->initTitles();
 	this->initButtons();
 	this->initDropDowns();
@@ -181,6 +197,11 @@ void Settings::setInitializers()
 }
 
 /*Update Functions*/
+void Settings::updateUserInput()
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Back_To_Main_Menu"])) && this->getInputTime())
+		this->setEndStateTrue();
+}
 void Settings::updateDropdowns(const float& dt)
 {
 	/*Resolution*/
@@ -293,6 +314,7 @@ void Settings::update(const float& dt)
 	this->updateInputTime(dt);
 	this->updateMousePosition();
 
+	this->updateUserInput();
 	this->updateDropdowns(dt);
 	this->updateButtonMap();
 	this->updateButtons();	

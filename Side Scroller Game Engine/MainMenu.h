@@ -19,6 +19,7 @@ class MainMenu :
 private:
     /*Initializers*/
     void initBackground();
+    void initKeyBinds();
     void initButtons();
 public: 
     /*Constructor & Destructor*/
@@ -29,6 +30,7 @@ public:
     void setInitializers();
 
     /*Update Functions*/
+    void updateUserInput();
     void updateButtons();
     void update(const float& dt);
 

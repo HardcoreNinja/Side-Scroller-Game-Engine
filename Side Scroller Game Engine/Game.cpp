@@ -108,12 +108,14 @@ void Game::update()
         if (this->states.back()->getEndState())
             this->states.pop_back();
     }
+   else if (this->states.empty())
+        this->window->close();
 }
 
 /*Render Functions*/
 void Game::render()
 {
-    this->window->clear(sf::Color::Magenta);
+    this->window->clear(sf::Color::Black);
     if(!this->states.empty())
     this->states.back()->render();
     this->window->display();

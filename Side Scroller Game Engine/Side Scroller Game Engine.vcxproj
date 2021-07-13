@@ -173,7 +173,10 @@
     <ClCompile Include="State.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Config\active_element_id.ini" />
     <None Include="Config\graphics_settings.ini" />
+    <None Include="Config\main_menu_key_binds.ini" />
+    <None Include="Config\settings_key_binds.ini" />
     <None Include="Config\supported_keys.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
