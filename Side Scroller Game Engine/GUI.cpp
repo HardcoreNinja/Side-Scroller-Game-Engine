@@ -174,7 +174,7 @@ void GUI::DropDown::initVariables(
 	sf::Vector2f dropdown_size, 
 	sf::Font* font, 
 	unsigned character_size, 
-	std::string list[], 
+	std::vector<std::string> list, 
 	float input_time, 
 	float max_input_time, 
 	unsigned number_of_elements, 
@@ -187,9 +187,9 @@ void GUI::DropDown::initVariables(
 		font,
 		list[default_index],
 		character_size,
-		sf::Color::White,
-		sf::Color::Blue,
-		sf::Color::Red
+		sf::Color::White, sf::Color::Blue, sf::Color::Red,
+		sf::Color(0, 0, 0, 255), sf::Color(0, 0, 0, 255), sf::Color(0, 0, 0, 255),
+		sf::Color::White, sf::Color::White, sf::Color::White
 		);
 
 	for (size_t i = 0; i < number_of_elements; i++)
@@ -200,8 +200,8 @@ void GUI::DropDown::initVariables(
 			list[i],
 			character_size,
 			sf::Color::White, sf::Color::Blue, sf::Color::Red,
-			sf::Color::Transparent, sf::Color::Transparent, sf::Color::Transparent,
-			sf::Color::Transparent, sf::Color::Transparent, sf::Color::Transparent,
+			sf::Color(0, 0, 0, 255), sf::Color(0, 0, 0, 255), sf::Color(0, 0, 0, 255),
+			sf::Color::White, sf::Color::White, sf::Color::White,
 			i
 			)
 		);
@@ -213,7 +213,7 @@ GUI::DropDown::DropDown(
 	sf::Vector2f dropdown_size, 
 	sf::Font* font, 
 	unsigned character_size, 
-	std::string list[], 
+	std::vector<std::string> list,
 	float input_time, 
 	float max_input_time, 
 	unsigned number_of_elements, 
@@ -254,7 +254,7 @@ void GUI::DropDown::updateInputTime(const float& dt)
 	if (this->inputTime < this->maxInputTime)
 		this->inputTime += 95.93f * dt;
 
-	std::cout << "Input Time: " << this->inputTime << '\n';
+	//std::cout << "Input Time: " << this->inputTime << '\n';
 }
 void GUI::DropDown::update(sf::Vector2i mouse_window_position, const float& dt)
 {
