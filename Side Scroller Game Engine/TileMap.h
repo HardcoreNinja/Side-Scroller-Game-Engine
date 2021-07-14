@@ -7,11 +7,11 @@ namespace TILEMAP
 	{
 		Default = 0,
 		Wall = 1,
-		Door = 2, 
-		Entity_Spawn_Position = 3,
-		Player_Enter_Position = 4,
-		Path_Finding = 5, 
-		Invisible_Wall = 6
+		Invisible_Wall = 2,
+		Door = 3, 
+		Entity_Spawn_Position = 4,
+		Player_Enter_Position = 5,
+		Path_Marker = 6
 	};
 
 	class Tile
@@ -50,7 +50,7 @@ namespace TILEMAP
 		const sf::Vector2f getTilePosition() const; 
 		const std::string getDoorName() const; 
 		const TILEMAP::TileType getTileType() const;
-		const std::string getTileMapInfo() const; 
+		const std::string getInfoAsString() const; 
 
 		/*Render Functions*/
 		void render(sf::RenderTarget& target);	
@@ -59,7 +59,7 @@ namespace TILEMAP
 	class TileMap
 	{
 	private: 
-		float tileSize;
+		unsigned tileSize;
 		unsigned tileLayers;
 		sf::Vector2u mapSize;
 		std::vector<std::vector<std::vector<std::unique_ptr<TILEMAP::Tile>>>> tileMap;
@@ -69,18 +69,30 @@ namespace TILEMAP
 
 		/*Initializers*/
 		void initVariables(
-			float tile_size,
+			unsigned tile_size,
 			sf::Vector2u map_size,
 			std::string file_path
 		);
 	public: 
 		/*Constructor & Destructor*/
 		TileMap(
-			float tile_size,
+			unsigned tile_size,
 			sf::Vector2u map_size,
 			std::string file_path
 		);
 		virtual ~TileMap();
+
+		/*Getters*/
+		const sf::Texture getTexture();
+		const sf::IntRect getTextureIntRect();
+
+		/*Setters*/
+		void setTextureIntRect(sf::IntRect texture_int_rect);
+		void setTileSize(unsigned tile_size);
+
+		/*Double & Halve Tile Functions*/
+		void doubleTileSize();
+		void halveTileSize();
 
 		/*Add & Remove Tile Functions*/
 		void addTile(
@@ -91,6 +103,16 @@ namespace TILEMAP
 			const TILEMAP::TileType tile_type
 		);
 		void removeTile(const unsigned tile_layer, const sf::Vector2u tile_position);
+
+		/*Clear Function*/
+		void clear();
+
+		/*Save & Load Functions*/
+		void saveToFile();
+		void loadFromFile();
+
+		/*Render Functions*/
+		void render(sf::RenderTarget& target, sf::View& view);
 	};
 }
 #endif

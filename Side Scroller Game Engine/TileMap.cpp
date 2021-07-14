@@ -18,6 +18,32 @@ void TILEMAP::Tile::initVariables(
 	this->tileSprite.setRotation(tile_rotation);
 	this->doorName = door_name;
 	this->tileType = tile_type;
+
+	/*Color Codes*/
+	switch (this->tileType)
+	{
+	case TILEMAP::TileType::Wall:
+		this->tileSprite.setColor(sf::Color::Red);
+		break;
+	case TILEMAP::TileType::Invisible_Wall:
+		this->tileSprite.setColor(sf::Color::Yellow);
+		break;
+	case TILEMAP::TileType::Door:
+		this->tileSprite.setColor(sf::Color::Blue);
+		break;
+	case TILEMAP::TileType::Entity_Spawn_Position:
+		this->tileSprite.setColor(sf::Color::White);
+		break;
+	case TILEMAP::TileType::Player_Enter_Position:
+		this->tileSprite.setColor(sf::Color::Green);
+		break;
+	case TILEMAP::TileType::Path_Marker:
+		this->tileSprite.setColor(sf::Color::Cyan);
+		break;
+	default: 
+		throw("ERROR::TILEMAP::TILE::INVALID_SWITCH_ENTRY::void TILEMAP::Tile::initVariables()");
+		break;
+	}
 }
 
 /*Constructor & Destructor*/
@@ -61,15 +87,15 @@ const TILEMAP::TileType TILEMAP::Tile::getTileType() const
 {
 	return this->tileType;
 }
-const std::string TILEMAP::Tile::getTileMapInfo() const
+const std::string TILEMAP::Tile::getInfoAsString() const
 {
 	std::stringstream ss; 
 
 	ss << this->tileSprite.getTextureRect().width << " " << this->tileSprite.getTextureRect().top << " "
-		<< static_cast<int>(this->tileType) << " "
+		<< this->tileRotation << " "
 		<< this->doorName << " "
-		<< this->tileRotation;
-
+		<< static_cast<int>(this->tileType);
+	
 	return ss.str();
 }
 
@@ -83,7 +109,7 @@ void TILEMAP::Tile::render(sf::RenderTarget& target)
 
 /*Initializers*/
 void TILEMAP::TileMap::initVariables(
-	float tile_size, 
+	unsigned tile_size,
 	sf::Vector2u map_size, 
 	std::string file_path 
 )
@@ -93,21 +119,21 @@ void TILEMAP::TileMap::initVariables(
 	this->filePath = file_path;
 	if (!this->texture.loadFromFile(this->filePath))
 		throw ("ERROR::TILEMAP::TILEMAP::FAILED_TO_LOAD::THIS->FILEPATH");
-	this->textureIntRect = sf::IntRect(0, 0, static_cast<int>(tile_size), static_cast<int>(tile_size));
+	this->textureIntRect = sf::IntRect(0, 0, tile_size, tile_size);
 	this->tileLayers = 10;
 
 	this->tileMap.resize(this->tileLayers);
 	for (size_t tile_layer = 0; tile_layer < this->tileLayers; tile_layer++)
 	{
 		this->tileMap[tile_layer].resize(this->mapSize.x);
-		for (size_t x = 0; x < this->mapSize.x; x++)
-			this->tileMap[tile_layer][x].resize(this->mapSize.y);
+		for (size_t x_pos = 0; x_pos < this->mapSize.x; x_pos++)
+			this->tileMap[tile_layer][x_pos].resize(this->mapSize.y);
 	}
 }
 
 /*Constructor & Destructor*/
 TILEMAP::TileMap::TileMap(
-	float tile_size,  
+	unsigned tile_size,
 	sf::Vector2u map_size, 
 	std::string file_path 
 )
@@ -122,6 +148,37 @@ TILEMAP::TileMap::~TileMap()
 {
 }
 
+/*Getters*/
+const sf::Texture TILEMAP::TileMap::getTexture()
+{
+	return this->texture;
+}
+const sf::IntRect TILEMAP::TileMap::getTextureIntRect()
+{
+	return this->textureIntRect;
+}
+
+/*Setters*/
+void TILEMAP::TileMap::setTextureIntRect(sf::IntRect texture_int_rect)
+{
+	this->textureIntRect = texture_int_rect;
+}
+void TILEMAP::TileMap::setTileSize(unsigned tile_size)
+{
+	this->tileSize = tile_size;
+}
+
+/*Double & Halve Tile Functions*/
+void TILEMAP::TileMap::doubleTileSize()
+{
+	this->tileSize = this->tileSize * 2;
+}
+void TILEMAP::TileMap::halveTileSize()
+{
+	this->tileSize = this->tileSize / 2;
+}
+
+/*Add & Remove Tile Functions*/
 void TILEMAP::TileMap::addTile(
 	const unsigned tile_layer, 
 	const sf::Vector2u tile_position, 
@@ -142,7 +199,7 @@ void TILEMAP::TileMap::addTile(
 			this->tileMap[tile_layer][tile_position.x][tile_position.y] = std::make_unique<TILEMAP::Tile>(
 				sf::Vector2f(std::floor(static_cast<float>(tile_position.x)), std::floor(static_cast<float>(tile_position.y))),
 				this->texture,
-				sf::IntRect(this->textureIntRect.width, this->textureIntRect.height, static_cast<int>(std::floor(this->tileSize)), static_cast<int>(std::floor(this->tileSize))),
+				sf::IntRect(this->textureIntRect.width, this->textureIntRect.height, this->tileSize, this->tileSize),
 				tile_rotation,
 				door_name,
 				tile_type
@@ -162,6 +219,159 @@ void TILEMAP::TileMap::removeTile(const unsigned tile_layer, const sf::Vector2u 
 		if (this->tileMap[tile_layer][tile_position.x][tile_position.y] != NULL)
 		{
 			this->tileMap[tile_layer][tile_position.x][tile_position.y].reset();
+		}
+	}
+}
+
+/*Clear Function*/
+void TILEMAP::TileMap::clear()
+{
+	for (size_t tile_layer = 0; tile_layer < this->tileLayers; tile_layer++)
+	{
+		for (size_t x_pos = 0; x_pos < this->tileLayers; x_pos++)
+		{
+			for (size_t y_pos = 0; y_pos < this->tileLayers; y_pos++)
+				this->tileMap[tile_layer][x_pos][y_pos].reset();
+			
+			this->tileMap[tile_layer][x_pos].clear();
+		}
+		this->tileMap[tile_layer].clear();
+	}
+	this->tileMap.clear();
+}
+
+/*Save & Load Functions*/
+void TILEMAP::TileMap::saveToFile()
+{
+	std::ofstream ofs("Config/tile_map.ini");
+
+	if (ofs.is_open())
+	{
+		ofs << this->mapSize.x << " " << this->mapSize.y << '\n';
+		ofs << static_cast<unsigned>(std::floor(this->tileSize)) << '\n';
+		ofs << this->tileLayers << '\n';
+		ofs << this->filePath << '\n';
+
+		for (size_t tile_layer = 0; tile_layer < this->tileLayers; tile_layer)
+		{
+			for (size_t x_pos = 0; x_pos < this->tileLayers; x_pos)
+			{
+				for (size_t y_pos = 0; y_pos < this->tileLayers; y_pos++)
+				{
+					if (this->tileMap[tile_layer][x_pos][y_pos])
+					{
+						ofs << tile_layer << " "
+							<< x_pos << " "
+							<< y_pos << " "
+							<< this->tileMap[tile_layer][x_pos][y_pos]->getInfoAsString() << " "
+							<< static_cast<unsigned>(std::floor(this->tileSize)) << " ";
+					}
+				}
+			}
+		}
+	}
+	else
+		throw ("ERROR::TILEMAP::TileMap::FAILED_TO_OPEN::SAVE_TO_FILE::tile_map.ini");
+
+	ofs.close();
+
+	std::cout << "Saved Tile Map!\n";
+}
+void TILEMAP::TileMap::loadFromFile()
+{
+	std::ifstream ifs("Config/tile_map.ini");
+
+	if (ifs.is_open())
+	{
+		sf::Vector2u mapSize = sf::Vector2u(0, 0);
+		unsigned tileSize = 0;
+		unsigned tileLayers = 0;
+		std::string filePath = "";
+		sf::Vector2f tilePosition = sf::Vector2f(0.f, 0.f);
+		unsigned intRectLeft;
+		unsigned intRectTop;
+		unsigned short tileRotation;
+		std::string doorName;
+		short tileType;
+	
+		ifs >> mapSize.x >> mapSize.y;
+		ifs >> tileSize; 
+		ifs >> tileLayers;
+		ifs >> filePath; 
+
+		this->mapSize.x = mapSize.x;
+		this->mapSize.y = mapSize.y;
+		this->tileSize = tileSize;
+		this->tileLayers = tileLayers;
+		this->filePath = filePath; 
+
+		if (!this->texture.loadFromFile(this->filePath))
+			throw("ERROR::TILEMAP::TileMap::void TILEMAP::TileMap::loadFromFile()::FAILED_TO_LOAD::this->filePath");
+
+		this->clear();
+
+		this->tileMap.resize(this->tileLayers);
+		for (size_t tile_layer = 0; tile_layer < this->tileLayers; tile_layer++)
+		{
+			this->tileMap[tile_layer].resize(this->mapSize.x);
+			for (size_t x_pos = 0; x_pos < this->mapSize.x; x_pos++)
+				this->tileMap[tile_layer][x_pos].resize(this->mapSize.y);
+		}
+
+		while (ifs >> tileLayers >> tilePosition.x >> tilePosition.y >> intRectLeft >> intRectTop >> tileRotation >> doorName >> tileType >> tileSize)
+			this->tileMap[tileLayers][tilePosition.x][tilePosition.y] = std::make_unique<TILEMAP::Tile>(
+				tilePosition,
+				this->filePath,
+				sf::IntRect(intRectLeft, intRectTop, tileSize, tileSize),
+				tileRotation,
+				doorName,
+				tileType
+				);
+	}
+	else
+		throw ("ERROR::TILEMAP::TileMap::FAILED_TO_OPEN::LOAD_FROM_FILE::tile_map.ini");
+
+	ifs.close(); 
+
+	std::cout << "Loaded Tile Map!\n";
+}
+
+/*Render Functions*/
+void TILEMAP::TileMap::render(sf::RenderTarget& target, sf::View& view)
+{
+	float sizeOffset = 256.f;
+
+	sf::Vector2f viewSize = view.getSize();
+	viewSize.x = viewSize.x + sizeOffset;
+	viewSize.y = viewSize.y + sizeOffset;
+
+	sf::FloatRect viewRect(
+		view.getCenter().x - viewSize.x / 2.f,
+		view.getCenter().y - viewSize.y / 2.f,
+		viewSize.x, viewSize.y
+	);
+
+	sf::FloatRect tileRect(
+		0,
+		0,
+		static_cast<float>(this->tileSize),
+		static_cast<float>(this->tileSize)
+	);
+
+	for (auto& tile_layer : this->tileMap)
+	{
+		for (auto& pos_x : tile_layer)
+		{
+			for (auto& pos_y : pos_x)
+			{
+				if (pos_y != NULL)
+				{
+					tileRect.left = pos_y->getTilePosition().x;
+					tileRect.top = pos_y->getTilePosition().y;
+					if (tileRect.intersects(viewRect))
+						pos_y->render(target);
+				}
+			}
 		}
 	}
 }

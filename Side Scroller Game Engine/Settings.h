@@ -40,7 +40,7 @@ public:
     void updateButtons();
     void update(const float& dt);
 
-    /*Save & Load Active Element IDs*/
+    /*Save & Load Functions*/
     void saveIDToFile();
     void loadIDFromFile();
 
