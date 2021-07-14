@@ -55,6 +55,9 @@
     <Filter Include="Source Files\Tile Map">
       <UniqueIdentifier>{ebf378c5-c2e8-4f0a-a1ec-efdf91b7dc96}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Config\Texture Selector Data">
+      <UniqueIdentifier>{11eb2f3b-c08e-44fb-8efd-f2b04a087af5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -126,6 +129,9 @@
     </None>
     <None Include="Config\settings_key_binds.ini">
       <Filter>Resource Files\Config\Key Binds\Settings</Filter>
+    </None>
+    <None Include="Config\texture_selector_data.ini">
+      <Filter>Resource Files\Config\Texture Selector Data</Filter>
     </None>
   </ItemGroup>
 </Project>

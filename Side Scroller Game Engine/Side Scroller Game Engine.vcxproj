@@ -180,6 +180,7 @@
     <None Include="Config\main_menu_key_binds.ini" />
     <None Include="Config\settings_key_binds.ini" />
     <None Include="Config\supported_keys.ini" />
+    <None Include="Config\texture_selector_data.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

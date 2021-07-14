@@ -1,5 +1,6 @@
 #ifndef TILE_MAP_H
 #define TILE_MAP_H
+#include "GUI.h"
 
 namespace TILEMAP
 {
@@ -113,6 +114,79 @@ namespace TILEMAP
 
 		/*Render Functions*/
 		void render(sf::RenderTarget& target, sf::View& view);
+	};
+
+	class TextureSelector
+	{
+	private:
+		
+		sf::RectangleShape bounds;
+		sf::Sprite textureSheet; 
+		sf::IntRect textureIntRect; 
+		sf::Vector2u mousePositionTile;
+		sf::RectangleShape selector;
+
+		unsigned tileSize; 
+
+		std::unique_ptr<GUI::Button> hideButton; 
+
+		bool show; 
+		bool active; 
+
+		float inputTime; 
+		float maxInputTime; 
+
+		int xScrollIncrementer; 
+		int yScrollIncrementer;
+
+		/*Initializers*/
+		void initVariables(
+			std::string data_file_path,
+			sf::Vector2f bounds_position,
+			sf::Vector2f bounds_size,
+			const sf::Texture* texture_sheet, 
+			sf::Font* font
+		);
+	public:
+		/*Constructor & Destructor*/
+		TextureSelector(
+			std::string data_file_path,
+			unsigned tileSize,
+			sf::Vector2f bounds_position,
+			sf::Vector2f bounds_size,
+			const sf::Texture* texture_sheet,
+			sf::Font* font,
+			float input_time,
+			float max_input_time
+		);
+		virtual ~TextureSelector();
+
+		/*Getters*/
+		const sf::IntRect getTextureIntRect();
+		const bool getActive(); 
+		const bool getInputTime();
+
+		/*Update Functions*/
+		void updateInputTime(const float& dt);
+		void update(const sf::Vector2i mouse_position_window, const float& dt);
+
+		/*Scroll Functions*/
+		void scrollUp();
+		void scrollDown();
+		void scrollLeft();
+		void scrollRight();
+
+		/*Double & Halve Selector Functions*/
+		void doubleSelectorSize();
+		void halveSelectorSize();
+
+		/*Save & Load Functions*/
+		void saveToFile();
+		void loadFromFile();
+
+		/*Render Functions*/
+		void render(sf::RenderTarget& target, const sf::View& view);
+
 	};
 }
 #endif

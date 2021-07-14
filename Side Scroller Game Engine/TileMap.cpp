@@ -321,11 +321,11 @@ void TILEMAP::TileMap::loadFromFile()
 		while (ifs >> tileLayers >> tilePosition.x >> tilePosition.y >> intRectLeft >> intRectTop >> tileRotation >> doorName >> tileType >> tileSize)
 			this->tileMap[tileLayers][tilePosition.x][tilePosition.y] = std::make_unique<TILEMAP::Tile>(
 				tilePosition,
-				this->filePath,
+				this->texture,
 				sf::IntRect(intRectLeft, intRectTop, tileSize, tileSize),
 				tileRotation,
 				doorName,
-				tileType
+				static_cast<TILEMAP::TileType>(tileType)
 				);
 	}
 	else
@@ -373,5 +373,270 @@ void TILEMAP::TileMap::render(sf::RenderTarget& target, sf::View& view)
 				}
 			}
 		}
+	}
+}
+
+/*Texture Selector========================================================================================================================================================================*/
+
+/*Initializers*/
+void TILEMAP::TextureSelector::initVariables(
+	std::string data_file_path, 
+	sf::Vector2f bounds_position, 
+	sf::Vector2f bounds_size, 
+	const sf::Texture* texture_sheet, 
+	sf::Font* font
+)
+{
+	this->loadFromFile();
+
+	/*Bounds*/
+	float boundsXOffset = 35.f;
+	this->bounds.setPosition(bounds_position.x + boundsXOffset, bounds_position.y);
+	this->bounds.setSize(bounds_size);
+	this->bounds.setFillColor(sf::Color(0, 0, 0, 100));
+	this->bounds.setOutlineThickness(1.f);
+	this->bounds.setOutlineColor(sf::Color::White);
+
+	/*Sprite Sheet*/
+	this->textureSheet.setPosition(this->bounds.getPosition());
+	this->textureSheet.setTexture(*texture_sheet);
+	this->textureSheet.setTextureRect(
+		sf::IntRect(
+			this->tileSize * this->xScrollIncrementer,
+			this->tileSize * this->yScrollIncrementer,
+			static_cast<int>(bounds_size.x),
+			static_cast<int>(bounds_size.y)
+		)
+	);
+
+	/*Selector*/
+	this->selector.setPosition(bounds_position.x * boundsXOffset, bounds_position.y);
+	this->selector.setSize(sf::Vector2f(static_cast<float>(this->tileSize), static_cast<float>(this->tileSize)));
+	this->selector.setFillColor(sf::Color::Transparent);
+	this->selector.setOutlineThickness(1.f);
+	this->selector.setOutlineColor(sf::Color::Red);
+
+	/*Texture Int Rect*/
+	this->textureIntRect.width = this->tileSize;
+	this->textureIntRect.top = this->tileSize;
+
+	/*Hide Button*/
+	float hideButtonOffset = 20.f;
+	this->hideButton = std::make_unique<GUI::Button>(
+		sf::Vector2f(bounds_position.x + hideButtonOffset, bounds_position.y + hideButtonOffset), //Button Position
+		sf::Vector2f(this->tileSize, this->tileSize),                                             //Button Size
+		font,                                                                                     //Text Font
+		"ts",                                                                                     //String
+		20,                                                                                       //Character Size
+		sf::Color::White, sf::Color::White, sf::Color::White                                      //Text Color (Idle, Hover, Click)
+		);
+}
+
+/*Constructor & Destructor*/
+TILEMAP::TextureSelector::TextureSelector(
+	std::string data_file_path, 
+	unsigned tileSize, 
+	sf::Vector2f bounds_position, 
+	sf::Vector2f bounds_size, 
+	const sf::Texture* texture_sheet, 
+	sf::Font* font, 
+	float input_time, 
+	float max_input_time
+)
+	:tileSize(tileSize), inputTime(input_time), maxInputTime(max_input_time), show(false), active(false)
+{
+	this->initVariables(
+		data_file_path,
+		bounds_position,
+		bounds_size,
+		texture_sheet,
+		font
+	);
+}
+TILEMAP::TextureSelector::~TextureSelector()
+{
+}
+
+/*Getters*/
+const sf::IntRect TILEMAP::TextureSelector::getTextureIntRect()
+{
+	return this->textureIntRect;
+}
+const bool TILEMAP::TextureSelector::getActive()
+{
+	return this->active;
+}
+const bool TILEMAP::TextureSelector::getInputTime()
+{
+	if (this->inputTime >= this->maxInputTime)
+	{
+		this->inputTime = 0.f;
+		return true;
+	}
+
+	return false;
+}
+
+/*Update Functions*/
+void TILEMAP::TextureSelector::updateInputTime(const float& dt)
+{
+	if (this->inputTime < this->maxInputTime)
+		this->inputTime += 95.93f * dt;
+
+	//std::cout << "Input Time: " << this->inputTime << '\n';
+}
+void TILEMAP::TextureSelector::update(const sf::Vector2i mouse_position_window, const float& dt)
+{
+	this->updateInputTime(dt);
+
+	this->hideButton->update(mouse_position_window);
+
+	if (this->hideButton->getButtonClickState() && this->getInputTime())
+	{
+		if (this->show)
+			this->show = false;
+		else if (!this->show)
+			this->show = true;
+	}
+
+	if (this->show)
+	{
+		if (this->bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse_position_window)))
+			this->active = true;
+		else if (!this->bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse_position_window)))
+			this->active = false; 
+
+		if (this->active)
+		{
+			this->mousePositionTile.x = (mouse_position_window.x - static_cast<int>(this->bounds.getPosition().x)) / this->tileSize;
+			this->mousePositionTile.y = (mouse_position_window.y - static_cast<int>(this->bounds.getPosition().y)) / this->tileSize;
+
+			this->selector.setPosition(
+				sf::Vector2f(
+					this->bounds.getPosition().x + (static_cast<float>(this->mousePositionTile.x * this->tileSize)),
+					this->bounds.getPosition().y + (static_cast<float>(this->mousePositionTile.y * this->tileSize))
+				)
+			);
+
+			this->textureIntRect.left = static_cast<int>(this->selector.getPosition().x - this->bounds.getPosition().x) + this->tileSize * this->xScrollIncrementer;
+			this->textureIntRect.top = static_cast<int>(this->selector.getPosition().y - this->bounds.getPosition().y) + this->tileSize * this->yScrollIncrementer;
+		}
+	}
+}
+
+/*Scroll Functions*/
+void TILEMAP::TextureSelector::scrollUp()
+{
+	if (this->yScrollIncrementer != 0)
+		this->yScrollIncrementer -= 1;
+
+	this->textureSheet.setTextureRect(
+		sf::IntRect(
+			this->tileSize * this->xScrollIncrementer,
+			this->tileSize * this->yScrollIncrementer,
+			static_cast<int>(this->bounds.getSize().x),
+			static_cast<int>(this->bounds.getSize().y)
+		)
+	);
+}
+void TILEMAP::TextureSelector::scrollDown()
+{
+	if (this->yScrollIncrementer != 117)
+		this->yScrollIncrementer += 1;
+
+	this->textureSheet.setTextureRect(
+		sf::IntRect(
+			this->tileSize * this->xScrollIncrementer,
+			this->tileSize * this->yScrollIncrementer,
+			static_cast<int>(this->bounds.getSize().x),
+			static_cast<int>(this->bounds.getSize().y)
+		)
+	);
+}
+void TILEMAP::TextureSelector::scrollLeft()
+{
+	if (this->xScrollIncrementer != 0)
+		this->xScrollIncrementer -= 1;
+
+	this->textureSheet.setTextureRect(
+		sf::IntRect(
+			this->tileSize * this->xScrollIncrementer,
+			this->tileSize * this->yScrollIncrementer,
+			static_cast<int>(this->bounds.getSize().x),
+			static_cast<int>(this->bounds.getSize().y)
+		)
+	);
+}
+void TILEMAP::TextureSelector::scrollRight()
+{
+	if (this->xScrollIncrementer != 64)
+		this->xScrollIncrementer += 1;
+
+	this->textureSheet.setTextureRect(
+		sf::IntRect(
+			this->tileSize * this->xScrollIncrementer,
+			this->tileSize * this->yScrollIncrementer,
+			static_cast<int>(this->bounds.getSize().x),
+			static_cast<int>(this->bounds.getSize().y)
+		)
+	);
+}
+
+/*Double & Halve Selector Functions*/
+void TILEMAP::TextureSelector::doubleSelectorSize()
+{
+	this->selector.setSize(sf::Vector2f(this->selector.getSize().x * 2.f, this->selector.getSize().y * 2.f));
+	this->textureIntRect.width = this->textureIntRect.width * 2; 
+	this->textureIntRect.height = this->textureIntRect.height * 2;
+}
+void TILEMAP::TextureSelector::halveSelectorSize()
+{
+	this->selector.setSize(sf::Vector2f(this->selector.getSize().x / 2.f, this->selector.getSize().y / 2.f));
+	this->textureIntRect.width = this->textureIntRect.width / 2;
+	this->textureIntRect.height = this->textureIntRect.height / 2;
+}
+
+/*Save & Load Functions*/
+void TILEMAP::TextureSelector::saveToFile()
+{
+	std::ofstream ofs("Config/texture_selector_data.ini");
+
+	if (ofs.is_open())
+		ofs << this->xScrollIncrementer << " " << this->yScrollIncrementer << '\n';
+	else
+		throw ("ERROR::TILEMAP::TEXTURE_SELECTOR::SAVE_TO_FILE::FAILED_TO_OPEN::texture_selector_data.ini");
+
+	ofs.close();
+
+	std::cout << "Saved Texture Selector Data!\n";
+}
+void TILEMAP::TextureSelector::loadFromFile()
+{
+	std::ifstream ifs("Config/texture_selector_data.ini");
+
+	if (ifs.is_open())
+		ifs >> this->xScrollIncrementer >> this->yScrollIncrementer;
+	else
+		throw ("ERROR::TILEMAP::TEXTURE_SELECTOR::LOAD_FROM_FILE::FAILED_TO_OPEN::texture_selector_data.ini");
+
+	ifs.close();
+
+	std::cout << "Loaded Texture Selector Data!\n";
+}
+
+/*Render Functions*/
+void TILEMAP::TextureSelector::render(sf::RenderTarget& target, const sf::View& view)
+{
+	target.setView(view);
+
+	this->hideButton->render(target);
+
+	if (this->show)
+	{
+		target.draw(this->bounds);
+		target.draw(this->textureSheet);
+
+		if (this->active)
+			target.draw(this->selector);
 	}
 }
