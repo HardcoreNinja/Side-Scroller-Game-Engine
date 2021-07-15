@@ -5,15 +5,22 @@
 void State::initVariables(GameDetails* game_details)
 {
 	this->gameDetails = game_details;
+	this->tileSize = 32;
 	this->endState = false;
 	this->inputTime = 0.f;
 	this->maxInputTime = 100.f;
+}
+void State::initView()
+{
+	this->view.setSize(static_cast<float>(this->gameDetails->window->getSize().x), static_cast<float>(this->gameDetails->window->getSize().y));
+	this->view.setCenter(static_cast<float>(this->gameDetails->window->getSize().x) / 2.f, static_cast<float>(this->gameDetails->window->getSize().y) / 2.f);
 }
 
 /*Constructor & Destructor*/
 State::State(GameDetails* game_details)
 {
 	this->initVariables(game_details);
+	this->initView();
 }
 State::~State()
 {
@@ -61,10 +68,40 @@ void State::setEndStateTrue()
 }
 
 /*Update Functions*/
+void State::updateResize()
+{
+	float aspectRatio = static_cast<float>(this->gameDetails->window->getSize().x) / static_cast<float>(this->gameDetails->window->getSize().y);
+
+	this->view.setSize(static_cast<float>(this->gameDetails->window->getSize().x) * aspectRatio, static_cast<float>(this->gameDetails->window->getSize().y) * aspectRatio);
+	this->view.setCenter((static_cast<float>(this->gameDetails->window->getSize().x) * aspectRatio) / 2.f, (static_cast<float>(this->gameDetails->window->getSize().y) * aspectRatio) / 2.f);
+
+	this->gameDetails->graphicsSettings->setVideoMode(sf::VideoMode(this->gameDetails->window->getSize().x, this->gameDetails->window->getSize().y));
+	this->gameDetails->graphicsSettings->saveToFile();
+	this->setWindow();
+	this->setStateInitializations();
+	this->initView();
+}
 void State::updateMousePosition()
 {
+	/*Desktop*/
 	this->mousePositionDesktop = sf::Mouse::getPosition();
+
+	/*Window*/
 	this->mousePositionWindow = sf::Mouse::getPosition(*this->gameDetails->window);
+
+	/*View*/
+	this->gameDetails->window->setView(this->view);
+	this->mousePositionView = this->gameDetails->window->mapPixelToCoords(sf::Mouse::getPosition(*this->gameDetails->window));
+
+	/*Tile w/ View*/
+	this->mousePositionTile = sf::Vector2u(
+		static_cast<unsigned>(this->mousePositionView.x) / this->tileSize,
+		static_cast<unsigned>(this->mousePositionView.y) / this->tileSize
+	);
+
+	/*GUI*/
+	this->gameDetails->window->setView(this->gameDetails->window->getDefaultView());
+	this->mousePositionGUI = this->gameDetails->window->mapPixelToCoords(sf::Mouse::getPosition(*this->gameDetails->window));
 }
 void State::updateButtonMap()
 {

@@ -2,6 +2,7 @@
 #define MAIN_MENU_H
 #include "State.h"
 #include "Settings.h"
+#include "Editor.h"
 
 /*Class Forward Declarations*/
 class State;

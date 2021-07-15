@@ -65,6 +65,20 @@ void MainMenu::initButtons()
 
 	this->buttonMap["Settings"] = std::move(this->button);
 
+	/*Editor*/
+	this->button = std::make_unique<GUI::Button>(
+		sf::Vector2f(positionX + (offsetX * 0), positionY - (offsetY * 1)), //Button Position
+		sf::Vector2f(sizeX, sizeY),											//Button Size
+		this->gameDetails->font,											//Text Font
+		"editor",															//String                     
+		characterSize,                                                      //Character Size 
+		sf::Color::White,                                                   //Text Idle Color
+		sf::Color::Blue,                                                    //Text Hover Color
+		sf::Color::Red                                                      //Text Click Color
+		);
+
+	this->buttonMap["Editor"] = std::move(this->button);
+
 	/*Quit Game*/
 	this->button = std::make_unique<GUI::Button>(
 		sf::Vector2f(positionX + (offsetX * 0), positionY + (offsetY * 1)), //Button Position
@@ -107,6 +121,9 @@ void MainMenu::updateUserInput()
 }
 void MainMenu::updateButtons()
 {
+	if (this->buttonMap["Editor"]->getButtonClickState() && this->getInputTime())
+		this->gameDetails->states->push_back(std::make_unique<Editor>(this->gameDetails));
+
 	if (this->buttonMap["Settings"]->getButtonClickState() && this->getInputTime())
 		this->gameDetails->states->push_back(std::make_unique<Settings>(this->gameDetails));
 
@@ -115,6 +132,8 @@ void MainMenu::updateButtons()
 }
 void MainMenu::update(const float& dt)
 {
+	if (this->gameDetails->event->type == sf::Event::Resized)
+		this->updateResize();
 	this->updateMousePosition();
 	this->updateButtonMap();
 

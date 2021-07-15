@@ -26,6 +26,7 @@ namespace TILEMAP
 	
 		/*Initializers*/
 		void initVariables(
+			float tileSize,
 			const sf::Vector2f tile_position,
 			const sf::Texture& tile_texture,
 			const sf::IntRect& tile_int_rect,
@@ -37,6 +38,7 @@ namespace TILEMAP
 	public:
 		/*Constructor & Destructor*/
 		Tile(
+			float tileSize,
 			const sf::Vector2f tile_position,
 			const sf::Texture& tile_texture,
 			const sf::IntRect& tile_int_rect,
@@ -84,7 +86,7 @@ namespace TILEMAP
 		virtual ~TileMap();
 
 		/*Getters*/
-		const sf::Texture getTexture();
+		const sf::Texture* getTexture();
 		const sf::IntRect getTextureIntRect();
 
 		/*Setters*/
@@ -113,7 +115,7 @@ namespace TILEMAP
 		void loadFromFile();
 
 		/*Render Functions*/
-		void render(sf::RenderTarget& target, sf::View& view);
+		void render(sf::RenderTarget& target, const sf::View& view);
 	};
 
 	class TextureSelector
@@ -168,7 +170,7 @@ namespace TILEMAP
 
 		/*Update Functions*/
 		void updateInputTime(const float& dt);
-		void update(const sf::Vector2i mouse_position_window, const float& dt);
+		void update(const sf::Vector2f mouse_position_gui, const float& dt);
 
 		/*Scroll Functions*/
 		void scrollUp();
@@ -185,7 +187,7 @@ namespace TILEMAP
 		void loadFromFile();
 
 		/*Render Functions*/
-		void render(sf::RenderTarget& target, const sf::View& view);
+		void render(sf::RenderTarget& target, const sf::View& window_default_view);
 
 	};
 }

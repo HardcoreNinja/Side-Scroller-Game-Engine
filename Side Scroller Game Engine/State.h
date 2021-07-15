@@ -2,11 +2,13 @@
 #define STATE_H
 #include "GraphicsSettings.h"
 #include "GUI.h"
+#include "TileMap.h"
 
 /*Class Forward Declarations*/
 class State;
 class GraphicsSettings;
-class Button;
+class GUI::Button;
+class GUI::DropDown;
 class sf::RenderTarget;
 class sf::RenderWindow;
 class sf::RectangleShape;
@@ -33,9 +35,13 @@ class State
 private:
 	/*Initializers*/
 	void initVariables(GameDetails* game_details);
+	void initView();
 protected:
 	/*Game Detials*/
 	GameDetails* gameDetails;
+
+	/*Tile Map*/
+	std::unique_ptr<TILEMAP::TileMap> tileMap;
 
 	/*Background Variables*/
 	sf::RectangleShape background; 
@@ -44,6 +50,16 @@ protected:
 	/*User Input Variables*/
 	sf::Vector2i mousePositionDesktop;
 	sf::Vector2i mousePositionWindow; 
+	sf::Vector2f mousePositionView; 
+	sf::Vector2f mousePositionGUI;
+	sf::Vector2u mousePositionTile;
+
+	/*View*/
+	sf::View view;
+
+	/*Tile Size*/	
+
+	unsigned tileSize;
 
 	/*Buttons*/
 	std::unique_ptr<GUI::Button> button; 
@@ -79,6 +95,7 @@ public:
 	virtual void setInitializers() = 0;
 
 	/*Update Functions*/
+	void updateResize();
 	void updateMousePosition();
 	void updateButtonMap();
 	void updateInputTime(const float& dt);

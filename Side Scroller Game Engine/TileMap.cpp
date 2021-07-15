@@ -3,6 +3,7 @@
 /*Tile========================================================================================================================================================================*/
 /*Initializers*/
 void TILEMAP::Tile::initVariables(
+	float tileSize,
 	const sf::Vector2f tile_position, 
 	const sf::Texture& tile_texture,
 	const sf::IntRect& tile_int_rect,
@@ -12,7 +13,7 @@ void TILEMAP::Tile::initVariables(
 
 )
 {
-	this->tileSprite.setPosition(std::floor(tile_position.x), std::floor(tile_position.y));
+	this->tileSprite.setPosition(std::floor(tile_position.x) * std::floor(tileSize), std::floor(tile_position.y) * std::floor(tileSize));
 	this->tileSprite.setTexture(tile_texture);
 	this->tileSprite.setTextureRect(tile_int_rect);
 	this->tileSprite.setRotation(tile_rotation);
@@ -22,6 +23,8 @@ void TILEMAP::Tile::initVariables(
 	/*Color Codes*/
 	switch (this->tileType)
 	{
+	case TILEMAP::TileType::Default:
+		break;
 	case TILEMAP::TileType::Wall:
 		this->tileSprite.setColor(sf::Color::Red);
 		break;
@@ -48,6 +51,7 @@ void TILEMAP::Tile::initVariables(
 
 /*Constructor & Destructor*/
 TILEMAP::Tile::Tile( 
+	float tileSize,
 	const sf::Vector2f tile_position, 
 	const sf::Texture& tile_texture,
 	const sf::IntRect& tile_int_rect,
@@ -58,6 +62,7 @@ TILEMAP::Tile::Tile(
 )
 {
 	this->initVariables(
+		tileSize,
 		tile_position,
 		tile_texture,
 		tile_int_rect,
@@ -149,9 +154,9 @@ TILEMAP::TileMap::~TileMap()
 }
 
 /*Getters*/
-const sf::Texture TILEMAP::TileMap::getTexture()
+const sf::Texture* TILEMAP::TileMap::getTexture()
 {
-	return this->texture;
+	return &this->texture;
 }
 const sf::IntRect TILEMAP::TileMap::getTextureIntRect()
 {
@@ -191,15 +196,15 @@ void TILEMAP::TileMap::addTile(
 		tile_layer < this->tileLayers && tile_layer >= 0 &&
 		tile_position.x < this->mapSize.x && tile_position.x >= 0 &&
 		tile_position.y < this->mapSize.y && tile_position.y >= 0
-
 		)
 	{
 		if (this->tileMap[tile_layer][tile_position.x][tile_position.y] == NULL)
 		{
 			this->tileMap[tile_layer][tile_position.x][tile_position.y] = std::make_unique<TILEMAP::Tile>(
+				std::floor(static_cast<float>(this->tileSize)),
 				sf::Vector2f(std::floor(static_cast<float>(tile_position.x)), std::floor(static_cast<float>(tile_position.y))),
 				this->texture,
-				sf::IntRect(this->textureIntRect.width, this->textureIntRect.height, this->tileSize, this->tileSize),
+				sf::IntRect(this->textureIntRect.left, this->textureIntRect.top, this->tileSize, this->tileSize),
 				tile_rotation,
 				door_name,
 				tile_type
@@ -303,7 +308,7 @@ void TILEMAP::TileMap::loadFromFile()
 		this->mapSize.y = mapSize.y;
 		this->tileSize = tileSize;
 		this->tileLayers = tileLayers;
-		this->filePath = filePath; 
+		//this->filePath = filePath; 
 
 		if (!this->texture.loadFromFile(this->filePath))
 			throw("ERROR::TILEMAP::TileMap::void TILEMAP::TileMap::loadFromFile()::FAILED_TO_LOAD::this->filePath");
@@ -320,6 +325,7 @@ void TILEMAP::TileMap::loadFromFile()
 
 		while (ifs >> tileLayers >> tilePosition.x >> tilePosition.y >> intRectLeft >> intRectTop >> tileRotation >> doorName >> tileType >> tileSize)
 			this->tileMap[tileLayers][tilePosition.x][tilePosition.y] = std::make_unique<TILEMAP::Tile>(
+				this->tileSize,
 				tilePosition,
 				this->texture,
 				sf::IntRect(intRectLeft, intRectTop, tileSize, tileSize),
@@ -337,7 +343,7 @@ void TILEMAP::TileMap::loadFromFile()
 }
 
 /*Render Functions*/
-void TILEMAP::TileMap::render(sf::RenderTarget& target, sf::View& view)
+void TILEMAP::TileMap::render(sf::RenderTarget& target, const sf::View& view)
 {
 	float sizeOffset = 256.f;
 
@@ -390,7 +396,7 @@ void TILEMAP::TextureSelector::initVariables(
 	this->loadFromFile();
 
 	/*Bounds*/
-	float boundsXOffset = 35.f;
+	float boundsXOffset = 40.f;
 	this->bounds.setPosition(bounds_position.x + boundsXOffset, bounds_position.y);
 	this->bounds.setSize(bounds_size);
 	this->bounds.setFillColor(sf::Color(0, 0, 0, 100));
@@ -418,7 +424,7 @@ void TILEMAP::TextureSelector::initVariables(
 
 	/*Texture Int Rect*/
 	this->textureIntRect.width = this->tileSize;
-	this->textureIntRect.top = this->tileSize;
+	this->textureIntRect.height = this->tileSize;
 
 	/*Hide Button*/
 	float hideButtonOffset = 20.f;
@@ -485,11 +491,11 @@ void TILEMAP::TextureSelector::updateInputTime(const float& dt)
 
 	//std::cout << "Input Time: " << this->inputTime << '\n';
 }
-void TILEMAP::TextureSelector::update(const sf::Vector2i mouse_position_window, const float& dt)
+void TILEMAP::TextureSelector::update(const sf::Vector2f mouse_position_gui, const float& dt)
 {
 	this->updateInputTime(dt);
 
-	this->hideButton->update(mouse_position_window);
+	this->hideButton->update(static_cast<sf::Vector2i>(mouse_position_gui));
 
 	if (this->hideButton->getButtonClickState() && this->getInputTime())
 	{
@@ -501,15 +507,15 @@ void TILEMAP::TextureSelector::update(const sf::Vector2i mouse_position_window, 
 
 	if (this->show)
 	{
-		if (this->bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse_position_window)))
+		if (this->bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse_position_gui)))
 			this->active = true;
-		else if (!this->bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse_position_window)))
+		else if (!this->bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse_position_gui)))
 			this->active = false; 
 
 		if (this->active)
 		{
-			this->mousePositionTile.x = (mouse_position_window.x - static_cast<int>(this->bounds.getPosition().x)) / this->tileSize;
-			this->mousePositionTile.y = (mouse_position_window.y - static_cast<int>(this->bounds.getPosition().y)) / this->tileSize;
+			this->mousePositionTile.x = (mouse_position_gui.x - static_cast<int>(this->bounds.getPosition().x)) / this->tileSize;
+			this->mousePositionTile.y = (mouse_position_gui.y - static_cast<int>(this->bounds.getPosition().y)) / this->tileSize;
 
 			this->selector.setPosition(
 				sf::Vector2f(
@@ -625,9 +631,9 @@ void TILEMAP::TextureSelector::loadFromFile()
 }
 
 /*Render Functions*/
-void TILEMAP::TextureSelector::render(sf::RenderTarget& target, const sf::View& view)
+void TILEMAP::TextureSelector::render(sf::RenderTarget& target, const sf::View& window_default_view)
 {
-	target.setView(view);
+	target.setView(window_default_view);
 
 	this->hideButton->render(target);
 

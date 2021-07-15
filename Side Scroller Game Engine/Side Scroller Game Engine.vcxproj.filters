@@ -58,6 +58,12 @@
     <Filter Include="Resource Files\Config\Texture Selector Data">
       <UniqueIdentifier>{11eb2f3b-c08e-44fb-8efd-f2b04a087af5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Config\Key Binds\Editor">
+      <UniqueIdentifier>{591ba89a-7e81-4e16-b5e2-a2b936843aaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Config\Tile Map">
+      <UniqueIdentifier>{a02d5d73-ea2e-4a58-952b-587dfa1f1414}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -83,6 +89,9 @@
     </ClInclude>
     <ClInclude Include="TileMap.h">
       <Filter>Source Files\Tile Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Source Files\States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +122,9 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Source Files\Tile Map</Filter>
     </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Source Files\States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\graphics_settings.ini">
@@ -132,6 +144,12 @@
     </None>
     <None Include="Config\texture_selector_data.ini">
       <Filter>Resource Files\Config\Texture Selector Data</Filter>
+    </None>
+    <None Include="Config\editor_keybinds.ini">
+      <Filter>Resource Files\Config\Key Binds\Editor</Filter>
+    </None>
+    <None Include="Config\tile_map.ini">
+      <Filter>Resource Files\Config\Tile Map</Filter>
     </None>
   </ItemGroup>
 </Project>

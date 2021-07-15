@@ -311,6 +311,8 @@ void Settings::updateButtons()
 }
 void Settings::update(const float& dt)
 {
+	if (this->gameDetails->event->type == sf::Event::Resized)
+		this->updateResize();
 	this->updateInputTime(dt);
 	this->updateMousePosition();
 

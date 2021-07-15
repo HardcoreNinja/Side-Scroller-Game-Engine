@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GraphicsSettings.h" />
     <ClInclude Include="GUI.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="TileMap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GraphicsSettings.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -176,11 +178,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\active_element_id.ini" />
+    <None Include="Config\editor_keybinds.ini" />
     <None Include="Config\graphics_settings.ini" />
     <None Include="Config\main_menu_key_binds.ini" />
     <None Include="Config\settings_key_binds.ini" />
     <None Include="Config\supported_keys.ini" />
     <None Include="Config\texture_selector_data.ini" />
+    <None Include="Config\tile_map.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
