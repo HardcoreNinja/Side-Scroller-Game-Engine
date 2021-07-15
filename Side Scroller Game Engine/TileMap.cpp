@@ -6,21 +6,15 @@ void TILEMAP::Tile::initVariables(
 	float tileSize,
 	const sf::Vector2f tile_position, 
 	const sf::Texture& tile_texture,
-	const sf::IntRect& tile_int_rect,
-	short unsigned tile_rotation,
-	const std::string door_name, 
-	const TILEMAP::TileType tile_type
-
+	const sf::IntRect& tile_int_rect
 )
 {
 	this->tileSprite.setPosition(std::floor(tile_position.x) * std::floor(tileSize), std::floor(tile_position.y) * std::floor(tileSize));
 	this->tileSprite.setTexture(tile_texture);
 	this->tileSprite.setTextureRect(tile_int_rect);
-	this->tileSprite.setRotation(tile_rotation);
-	this->doorName = door_name;
-	this->tileType = tile_type;
+	this->tileSprite.setRotation(this->tileRotation);
 
-	/*Color Codes*/
+	/*Color Codes
 	switch (this->tileType)
 	{
 	case TILEMAP::TileType::Default:
@@ -46,7 +40,7 @@ void TILEMAP::Tile::initVariables(
 	default: 
 		throw("ERROR::TILEMAP::TILE::INVALID_SWITCH_ENTRY::void TILEMAP::Tile::initVariables()");
 		break;
-	}
+	}*/
 }
 
 /*Constructor & Destructor*/
@@ -60,15 +54,13 @@ TILEMAP::Tile::Tile(
 	const TILEMAP::TileType tile_type
 
 )
+	: tileRotation(tile_rotation), doorName(door_name), tileType(tile_type)
 {
 	this->initVariables(
 		tileSize,
 		tile_position,
 		tile_texture,
-		tile_int_rect,
-		tile_rotation,
-		door_name,
-		tile_type
+		tile_int_rect
 	);
 }
 TILEMAP::Tile::~Tile()
@@ -96,7 +88,7 @@ const std::string TILEMAP::Tile::getInfoAsString() const
 {
 	std::stringstream ss; 
 
-	ss << this->tileSprite.getTextureRect().width << " " << this->tileSprite.getTextureRect().top << " "
+	ss << this->tileSprite.getTextureRect().left << " " << this->tileSprite.getTextureRect().top << " "
 		<< this->tileRotation << " "
 		<< this->doorName << " "
 		<< static_cast<int>(this->tileType);
@@ -252,16 +244,15 @@ void TILEMAP::TileMap::saveToFile()
 
 	if (ofs.is_open())
 	{
-		ofs << this->mapSize.x << " " << this->mapSize.y << '\n';
 		ofs << static_cast<unsigned>(std::floor(this->tileSize)) << '\n';
-		ofs << this->tileLayers << '\n';
+		ofs << this->mapSize.x << " " << this->mapSize.y << '\n';
 		ofs << this->filePath << '\n';
 
-		for (size_t tile_layer = 0; tile_layer < this->tileLayers; tile_layer)
+		for (size_t tile_layer = 0; tile_layer < this->tileLayers; tile_layer++)
 		{
-			for (size_t x_pos = 0; x_pos < this->tileLayers; x_pos)
+			for (size_t x_pos = 0; x_pos < this->mapSize.x; x_pos++)
 			{
-				for (size_t y_pos = 0; y_pos < this->tileLayers; y_pos++)
+				for (size_t y_pos = 0; y_pos < this->mapSize.y; y_pos++)
 				{
 					if (this->tileMap[tile_layer][x_pos][y_pos])
 					{
@@ -299,16 +290,13 @@ void TILEMAP::TileMap::loadFromFile()
 		std::string doorName;
 		short tileType;
 	
+		ifs >> tileSize;
 		ifs >> mapSize.x >> mapSize.y;
-		ifs >> tileSize; 
-		ifs >> tileLayers;
-		ifs >> filePath; 
+		ifs >> this->filePath;
 
 		this->mapSize.x = mapSize.x;
 		this->mapSize.y = mapSize.y;
 		this->tileSize = tileSize;
-		this->tileLayers = tileLayers;
-		//this->filePath = filePath; 
 
 		if (!this->texture.loadFromFile(this->filePath))
 			throw("ERROR::TILEMAP::TileMap::void TILEMAP::TileMap::loadFromFile()::FAILED_TO_LOAD::this->filePath");
@@ -325,8 +313,8 @@ void TILEMAP::TileMap::loadFromFile()
 
 		while (ifs >> tileLayers >> tilePosition.x >> tilePosition.y >> intRectLeft >> intRectTop >> tileRotation >> doorName >> tileType >> tileSize)
 			this->tileMap[tileLayers][tilePosition.x][tilePosition.y] = std::make_unique<TILEMAP::Tile>(
-				this->tileSize,
-				tilePosition,
+				std::floor(static_cast<float>( this->tileSize)),
+				sf::Vector2f(std::floor(tilePosition.x), std::floor(tilePosition.y)),
 				this->texture,
 				sf::IntRect(intRectLeft, intRectTop, tileSize, tileSize),
 				tileRotation,

@@ -51,7 +51,6 @@ void Editor::initTileMap()
 	{
 		ifs >> tileSize;
 		ifs >> mapSize.x >> mapSize.y;
-	
 	}
 	else
 		throw ("ERROR::EDITOR::void Editor::initTileMap()::FAILED_TO_LOAD::tile_map.ini");
@@ -111,7 +110,7 @@ Editor::Editor(GameDetails* game_details)
 	this->initText();
 	this->initTileMap();
 	this->initTextureSelector();
-	//this->initLoadLatestTileMap();
+	this->initLoadLatestTileMap();
 }
 Editor::~Editor()
 {
@@ -233,6 +232,14 @@ void Editor::updateTileMap()
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
 		this->tileMap->removeTile(this->tileLayer, this->mousePositionTile);
 }
+void Editor::updateUserInput()
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Back_To_Main_Menu"])) && this->getInputTime())
+	{
+		this->tileMap->saveToFile();
+		this->setEndStateTrue();
+	}
+}
 void Editor::update(const float& dt)
 {
 	if (this->gameDetails->event->type == sf::Event::Resized)
@@ -246,6 +253,7 @@ void Editor::update(const float& dt)
 	this->updateTextureSelector(dt);
 	this->updateTileMap();
 	this->updateSelectorRect();
+	this->updateUserInput();
 }
 
 /*Render Functions*/

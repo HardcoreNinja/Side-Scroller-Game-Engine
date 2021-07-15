@@ -49,6 +49,7 @@ public:
     void updateSelectorRect();
     void updateTextureSelector(const float& dt);
     void updateTileMap();
+    void updateUserInput();
     void update(const float& dt);
 
     /*Render Functions*/

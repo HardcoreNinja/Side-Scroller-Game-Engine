@@ -29,11 +29,7 @@ namespace TILEMAP
 			float tileSize,
 			const sf::Vector2f tile_position,
 			const sf::Texture& tile_texture,
-			const sf::IntRect& tile_int_rect,
-			const short unsigned tile_rotation = 0,
-			const std::string door_name = "NULL",
-			const TILEMAP::TileType tile_type = TileType::Default
-		
+			const sf::IntRect& tile_int_rect
 		);
 	public:
 		/*Constructor & Destructor*/
