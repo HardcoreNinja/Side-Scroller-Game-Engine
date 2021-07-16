@@ -18,6 +18,25 @@ void Editor::initVariables()
 	/*View Variables*/
 	this->cameraSpeed = 1280.f;
 }
+void Editor::initBackground()
+{
+	this->background.setSize(
+		sf::Vector2f(
+			static_cast<float>(this->gameDetails->window->getSize().x * 6),
+			static_cast<float>(this->gameDetails->window->getSize().y)
+		)
+	);
+
+	if (!this->backgroundTexture.loadFromFile("Resources/Images/Background/Level_1/background.png"))
+		throw ("ERROR::EDITOR::FAILED_TO_LOAD::background.png");
+
+	this->backgroundTexture.setRepeated(true);
+	this->backgroundTexture.setSmooth(true);
+
+	this->background.setTextureRect(sf::IntRect(0, 0, this->background.getSize().x, this->background.getSize().y));
+
+	this->background.setTexture(&this->backgroundTexture);
+}
 void Editor::initRenderTexture()
 {
 	this->renderTexture.create(this->gameDetails->window->getSize().x, this->gameDetails->window->getSize().y);
@@ -109,6 +128,7 @@ Editor::Editor(GameDetails* game_details)
 	: State(game_details)
 {
 	this->initVariables();
+	this->initBackground();
 	this->initRenderTexture();
 	this->initKeyBinds();
 	this->initText();
@@ -360,8 +380,11 @@ void Editor::update(const float& dt)
 	this->updateUserInput(dt);
 }
 
-
 /*Render Functions*/
+void Editor::renderBackground(sf::RenderTarget& target)
+{
+	target.draw(this->background);
+}
 void Editor::renderSideBar(sf::RenderTarget& target)
 {
 	target.draw(this->sideBar);
@@ -390,6 +413,7 @@ void Editor::render(sf::RenderTarget* target)
 	/*Items to be Rendered With View*/
 	this->renderTexture.clear();
 	this->renderTexture.setView(this->view);
+	this->renderBackground(this->renderTexture);
 	this->renderTileMap(this->renderTexture);
 	this->renderSelectorRect(this->renderTexture);
 	this->renderTexture.display();

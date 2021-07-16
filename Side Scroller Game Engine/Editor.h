@@ -31,6 +31,7 @@ private:
 
     /*Initializers*/
     void initVariables();
+    void initBackground();
     void initRenderTexture();
     void initKeyBinds();
     void initText();
@@ -58,6 +59,7 @@ public:
     void update(const float& dt);
 
     /*Render Functions*/
+    void renderBackground(sf::RenderTarget& target);
     void renderSideBar(sf::RenderTarget& target);
     void renderTextureSelector(sf::RenderTarget& target);
     void renderSelectorRect(sf::RenderTarget& target);
