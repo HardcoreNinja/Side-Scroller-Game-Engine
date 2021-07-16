@@ -20,6 +20,9 @@ private:
     std::unique_ptr<TILEMAP::TextureSelector> textureSelector;
     sf::RectangleShape selectorRect;
 
+    /*Side Bar*/
+    sf::RectangleShape sideBar;
+
     /*View Variables*/
     float cameraSpeed; 
 
@@ -28,10 +31,12 @@ private:
 
     /*Initializers*/
     void initVariables();
+    void initRenderTexture();
     void initKeyBinds();
     void initText();
     void initTileMap();
     void initTextureSelector();
+    void initSideBar();
     void initLoadLatestTileMap();
 public:
     /*Constructor & Destructor*/
@@ -49,10 +54,11 @@ public:
     void updateSelectorRect();
     void updateTextureSelector(const float& dt);
     void updateTileMap();
-    void updateUserInput();
+    void updateUserInput(const float& dt);
     void update(const float& dt);
 
     /*Render Functions*/
+    void renderSideBar(sf::RenderTarget& target);
     void renderTextureSelector(sf::RenderTarget& target);
     void renderSelectorRect(sf::RenderTarget& target);
     void renderCursorText(sf::RenderTarget& target);

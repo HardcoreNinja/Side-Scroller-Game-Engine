@@ -4,6 +4,15 @@
 
 namespace TILEMAP
 {
+	/*Class Forward Declarations*/
+	class GUI::Button;
+	sf::Sprite;
+	sf::Texture; 
+	sf::RectangleShape;
+	sf::RenderTexture;
+	sf::Color;
+	sf::View;
+
 	enum class TileType
 	{
 		Default = 0,
@@ -19,6 +28,7 @@ namespace TILEMAP
 	{
 	private: 
 
+		float tileSize;
 		sf::Sprite tileSprite;
 		std::string doorName;
 		TileType tileType;
@@ -26,7 +36,6 @@ namespace TILEMAP
 	
 		/*Initializers*/
 		void initVariables(
-			float tileSize,
 			const sf::Vector2f tile_position,
 			const sf::Texture& tile_texture,
 			const sf::IntRect& tile_int_rect
@@ -34,7 +43,7 @@ namespace TILEMAP
 	public:
 		/*Constructor & Destructor*/
 		Tile(
-			float tileSize,
+			float tile_size,
 			const sf::Vector2f tile_position,
 			const sf::Texture& tile_texture,
 			const sf::IntRect& tile_int_rect,
@@ -45,6 +54,7 @@ namespace TILEMAP
 		virtual ~Tile();
 
 		/*Getters*/
+		const float getTileSize() const;
 		const sf::Sprite getTileSprite() const;
 		const sf::Vector2f getTilePosition() const; 
 		const std::string getDoorName() const; 

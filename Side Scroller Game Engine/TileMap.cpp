@@ -3,18 +3,17 @@
 /*Tile========================================================================================================================================================================*/
 /*Initializers*/
 void TILEMAP::Tile::initVariables(
-	float tileSize,
 	const sf::Vector2f tile_position, 
 	const sf::Texture& tile_texture,
 	const sf::IntRect& tile_int_rect
 )
 {
-	this->tileSprite.setPosition(std::floor(tile_position.x) * std::floor(tileSize), std::floor(tile_position.y) * std::floor(tileSize));
+	this->tileSprite.setPosition(std::floor(tile_position.x) * std::floor(this->tileSize), std::floor(tile_position.y) * std::floor(this->tileSize));
 	this->tileSprite.setTexture(tile_texture);
 	this->tileSprite.setTextureRect(tile_int_rect);
 	this->tileSprite.setRotation(this->tileRotation);
 
-	/*Color Codes
+	/*Color Codes*/
 	switch (this->tileType)
 	{
 	case TILEMAP::TileType::Default:
@@ -40,12 +39,12 @@ void TILEMAP::Tile::initVariables(
 	default: 
 		throw("ERROR::TILEMAP::TILE::INVALID_SWITCH_ENTRY::void TILEMAP::Tile::initVariables()");
 		break;
-	}*/
+	}
 }
 
 /*Constructor & Destructor*/
 TILEMAP::Tile::Tile( 
-	float tileSize,
+	float tile_size,
 	const sf::Vector2f tile_position, 
 	const sf::Texture& tile_texture,
 	const sf::IntRect& tile_int_rect,
@@ -54,10 +53,9 @@ TILEMAP::Tile::Tile(
 	const TILEMAP::TileType tile_type
 
 )
-	: tileRotation(tile_rotation), doorName(door_name), tileType(tile_type)
+	: tileSize(tile_size), tileRotation(tile_rotation), doorName(door_name), tileType(tile_type)
 {
 	this->initVariables(
-		tileSize,
 		tile_position,
 		tile_texture,
 		tile_int_rect
@@ -68,6 +66,10 @@ TILEMAP::Tile::~Tile()
 }
 
 /*Getters*/
+const float TILEMAP::Tile::getTileSize() const
+{
+	return this->tileSize;
+}
 const sf::Sprite TILEMAP::Tile::getTileSprite() const
 {
 	return this->tileSprite;
@@ -103,7 +105,6 @@ void TILEMAP::Tile::render(sf::RenderTarget& target)
 }
 
 /*Tile Map========================================================================================================================================================================*/
-
 /*Initializers*/
 void TILEMAP::TileMap::initVariables(
 	unsigned tile_size,
@@ -117,7 +118,7 @@ void TILEMAP::TileMap::initVariables(
 	if (!this->texture.loadFromFile(this->filePath))
 		throw ("ERROR::TILEMAP::TILEMAP::FAILED_TO_LOAD::THIS->FILEPATH");
 	this->textureIntRect = sf::IntRect(0, 0, tile_size, tile_size);
-	this->tileLayers = 10;
+	this->tileLayers = 4;
 
 	this->tileMap.resize(this->tileLayers);
 	for (size_t tile_layer = 0; tile_layer < this->tileLayers; tile_layer++)
@@ -244,7 +245,6 @@ void TILEMAP::TileMap::saveToFile()
 
 	if (ofs.is_open())
 	{
-		ofs << static_cast<unsigned>(std::floor(this->tileSize)) << '\n';
 		ofs << this->mapSize.x << " " << this->mapSize.y << '\n';
 		ofs << this->filePath << '\n';
 
@@ -260,7 +260,7 @@ void TILEMAP::TileMap::saveToFile()
 							<< x_pos << " "
 							<< y_pos << " "
 							<< this->tileMap[tile_layer][x_pos][y_pos]->getInfoAsString() << " "
-							<< static_cast<unsigned>(std::floor(this->tileSize)) << " ";
+							<< std::floor(this->tileMap[tile_layer][x_pos][y_pos]->getTileSize()) << " ";
 					}
 				}
 			}
@@ -280,7 +280,7 @@ void TILEMAP::TileMap::loadFromFile()
 	if (ifs.is_open())
 	{
 		sf::Vector2u mapSize = sf::Vector2u(0, 0);
-		unsigned tileSize = 0;
+		float tileSize = 0;
 		unsigned tileLayers = 0;
 		std::string filePath = "";
 		sf::Vector2f tilePosition = sf::Vector2f(0.f, 0.f);
@@ -290,13 +290,11 @@ void TILEMAP::TileMap::loadFromFile()
 		std::string doorName;
 		short tileType;
 	
-		ifs >> tileSize;
 		ifs >> mapSize.x >> mapSize.y;
 		ifs >> this->filePath;
 
 		this->mapSize.x = mapSize.x;
 		this->mapSize.y = mapSize.y;
-		this->tileSize = tileSize;
 
 		if (!this->texture.loadFromFile(this->filePath))
 			throw("ERROR::TILEMAP::TileMap::void TILEMAP::TileMap::loadFromFile()::FAILED_TO_LOAD::this->filePath");
@@ -313,7 +311,7 @@ void TILEMAP::TileMap::loadFromFile()
 
 		while (ifs >> tileLayers >> tilePosition.x >> tilePosition.y >> intRectLeft >> intRectTop >> tileRotation >> doorName >> tileType >> tileSize)
 			this->tileMap[tileLayers][tilePosition.x][tilePosition.y] = std::make_unique<TILEMAP::Tile>(
-				std::floor(static_cast<float>( this->tileSize)),
+				tileSize,
 				sf::Vector2f(std::floor(tilePosition.x), std::floor(tilePosition.y)),
 				this->texture,
 				sf::IntRect(intRectLeft, intRectTop, tileSize, tileSize),
@@ -371,7 +369,6 @@ void TILEMAP::TileMap::render(sf::RenderTarget& target, const sf::View& view)
 }
 
 /*Texture Selector========================================================================================================================================================================*/
-
 /*Initializers*/
 void TILEMAP::TextureSelector::initVariables(
 	std::string data_file_path, 
@@ -384,8 +381,7 @@ void TILEMAP::TextureSelector::initVariables(
 	this->loadFromFile();
 
 	/*Bounds*/
-	float boundsXOffset = 40.f;
-	this->bounds.setPosition(bounds_position.x + boundsXOffset, bounds_position.y);
+	this->bounds.setPosition(bounds_position.x + this->tileSize, bounds_position.y);
 	this->bounds.setSize(bounds_size);
 	this->bounds.setFillColor(sf::Color(0, 0, 0, 100));
 	this->bounds.setOutlineThickness(1.f);
@@ -404,7 +400,7 @@ void TILEMAP::TextureSelector::initVariables(
 	);
 
 	/*Selector*/
-	this->selector.setPosition(bounds_position.x * boundsXOffset, bounds_position.y);
+	this->selector.setPosition(bounds_position.x * this->tileSize, bounds_position.y);
 	this->selector.setSize(sf::Vector2f(static_cast<float>(this->tileSize), static_cast<float>(this->tileSize)));
 	this->selector.setFillColor(sf::Color::Transparent);
 	this->selector.setOutlineThickness(1.f);
@@ -415,9 +411,10 @@ void TILEMAP::TextureSelector::initVariables(
 	this->textureIntRect.height = this->tileSize;
 
 	/*Hide Button*/
-	float hideButtonOffset = 20.f;
+	float hideButtonOffsetX = 16.f;
+	float hideButtonOffsetY = 17.f;
 	this->hideButton = std::make_unique<GUI::Button>(
-		sf::Vector2f(bounds_position.x + hideButtonOffset, bounds_position.y + hideButtonOffset), //Button Position
+		sf::Vector2f(bounds_position.x + hideButtonOffsetX, bounds_position.y + hideButtonOffsetY), //Button Position
 		sf::Vector2f(this->tileSize, this->tileSize),                                             //Button Size
 		font,                                                                                     //Text Font
 		"ts",                                                                                     //String

@@ -14,6 +14,9 @@ class sf::RenderWindow;
 class sf::RectangleShape;
 class sf::Texture;
 class sf::Color;
+class sf::View;
+class sf::Sprite;
+class sf::RenderTexture;
 
 struct GameDetails
 {
@@ -57,8 +60,11 @@ protected:
 	/*View*/
 	sf::View view;
 
-	/*Tile Size*/	
+	/*Render Texture Variables*/
+	sf::RenderTexture renderTexture; 
+	sf::Sprite renderSprite;
 
+	/*Tile Size*/	
 	unsigned tileSize;
 
 	/*Buttons*/
