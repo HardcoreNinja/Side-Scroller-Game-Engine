@@ -13,7 +13,7 @@ void TILEMAP::Tile::initVariables(
 	this->tileSprite.setTextureRect(tile_int_rect);
 	this->tileSprite.setRotation(this->tileRotation);
 
-	/*Color Codes*/
+	/*Color Codes
 	switch (this->tileType)
 	{
 	case TILEMAP::TileType::Default:
@@ -39,7 +39,7 @@ void TILEMAP::Tile::initVariables(
 	default: 
 		throw("ERROR::TILEMAP::TILE::INVALID_SWITCH_ENTRY::void TILEMAP::Tile::initVariables()");
 		break;
-	}
+	}*/
 }
 
 /*Constructor & Destructor*/

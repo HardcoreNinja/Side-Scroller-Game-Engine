@@ -22,7 +22,7 @@ void Editor::initBackground()
 {
 	this->environmentDetails.background.setSize(
 		sf::Vector2f(
-			static_cast<float>(this->gameDetails->window->getSize().x * 6),
+			static_cast<float>(this->gameDetails->window->getSize().x * 2),
 			static_cast<float>(this->gameDetails->window->getSize().y)
 		)
 	);
@@ -48,7 +48,7 @@ void Editor::initForeground()
 {
 	this->environmentDetails.foreground.setSize(
 		sf::Vector2f(
-			static_cast<float>(this->gameDetails->window->getSize().x * 6),
+			static_cast<float>(this->gameDetails->window->getSize().x * 2),
 			static_cast<float>(this->gameDetails->window->getSize().y)
 		)
 	);
