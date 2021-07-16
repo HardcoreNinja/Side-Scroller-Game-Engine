@@ -20,22 +20,55 @@ void Editor::initVariables()
 }
 void Editor::initBackground()
 {
-	this->background.setSize(
+	this->environmentDetails.background.setSize(
 		sf::Vector2f(
 			static_cast<float>(this->gameDetails->window->getSize().x * 6),
 			static_cast<float>(this->gameDetails->window->getSize().y)
 		)
 	);
 
-	if (!this->backgroundTexture.loadFromFile("Resources/Images/Background/Level_1/background.png"))
+	if (!this->environmentDetails.backgroundTexture.loadFromFile("Resources/Images/Background/Level_1/background.png"))
 		throw ("ERROR::EDITOR::FAILED_TO_LOAD::background.png");
 
-	this->backgroundTexture.setRepeated(true);
-	this->backgroundTexture.setSmooth(true);
+	this->environmentDetails.backgroundTexture.setRepeated(true);
+	this->environmentDetails.backgroundTexture.setSmooth(true);
 
-	this->background.setTextureRect(sf::IntRect(0, 0, this->background.getSize().x, this->background.getSize().y));
+	this->environmentDetails.background.setTextureRect(
+		sf::IntRect(
+			0, 
+			0, 
+			this->environmentDetails.background.getSize().x,
+			this->environmentDetails.background.getSize().y
+		)
+	);
 
-	this->background.setTexture(&this->backgroundTexture);
+	this->environmentDetails.background.setTexture(&this->environmentDetails.backgroundTexture);
+}
+void Editor::initForeground()
+{
+	this->environmentDetails.foreground.setSize(
+		sf::Vector2f(
+			static_cast<float>(this->gameDetails->window->getSize().x * 6),
+			static_cast<float>(this->gameDetails->window->getSize().y)
+		)
+	);
+
+	if (!this->environmentDetails.foregroundTexture.loadFromFile("Resources/Images/Foreground/foreground.png"))
+		throw ("ERROR::EDITOR::FAILED_TO_LOAD::background.png");
+
+	this->environmentDetails.foregroundTexture.setRepeated(true);
+	this->environmentDetails.foregroundTexture.setSmooth(true);
+
+	this->environmentDetails.foreground.setTextureRect(
+		sf::IntRect(
+			0,
+			0,
+			this->environmentDetails.foreground.getSize().x,
+			this->environmentDetails.foreground.getSize().y
+		)
+	);
+
+	this->environmentDetails.foreground.setTexture(&this->environmentDetails.foregroundTexture);
 }
 void Editor::initRenderTexture()
 {
@@ -83,20 +116,20 @@ void Editor::initTileMap()
 	this->tileMap = std::make_unique<TILEMAP::TileMap>(
 		this->tileSize,
 		mapSize,
-		"Resources/Images/Texture_Sheets/PipoyaMasterLevel.png"
+		"Resources/Images/Tile_Set/tileset.png"
 		);
 }
 void Editor::initTextureSelector()
 {
 	this->textureSelector = std::make_unique<TILEMAP::TextureSelector>(
-		"Config/texture_selector_data.ini",
-		this->tileSize,
-		sf::Vector2f(0, 0),
-		sf::Vector2f(256.f, 512.f),
-		this->tileMap->getTexture(),
-		this->gameDetails->font,
-		this->inputTime,
-		this->maxInputTime
+		"Config/texture_selector_data.ini", //Texture Selector Data File
+		this->tileSize,                     //Tile Size
+		sf::Vector2f(0, 0),                 //Bounds Position
+		sf::Vector2f(768.f, 384.f),         //Bounds Size
+		this->tileMap->getTexture(),        //Texture
+		this->gameDetails->font,            //Font
+		this->inputTime,                    //Input Time
+		this->maxInputTime                  //Max Input Time
 		);
 
 	this->selectorRect.setSize(sf::Vector2f(static_cast<float>(this->tileSize), static_cast<float>(this->tileSize)));
@@ -129,6 +162,7 @@ Editor::Editor(GameDetails* game_details)
 {
 	this->initVariables();
 	this->initBackground();
+	this->initForeground();
 	this->initRenderTexture();
 	this->initKeyBinds();
 	this->initText();
@@ -206,13 +240,13 @@ void Editor::updateCursorText()
 
 		std::stringstream ss; 
 
-		ss << "mouse position window: " << this->mousePositionWindow.x << " x " << this->mousePositionWindow.y << '\n'
-			<< "mouse position view: " << this->mousePositionView.x << " x " << this->mousePositionView.y << '\n'
-			<< " mouse position tile: " << this->mousePositionTile.x << " x " << this->mousePositionTile.y << '\n'
-			<< "tile map int rect: " << this->tileMap->getTextureIntRect().left << " x " << this->tileMap->getTextureIntRect().top << '\n'
-			<< "tile rotation: " << this->tileRotation << '\n'
-			<< "door name: " << this->doorName << '\n'
-			<< "tile type: " << this->tileType << '\n'
+		ss << "mouse position window: " << this->mousePositionWindow.x << " x " << this->mousePositionWindow.y << "\n\n"
+			<< "mouse position view: " << this->mousePositionView.x << " x " << this->mousePositionView.y << "\n\n"
+			<< " mouse position tile: " << this->mousePositionTile.x << " x " << this->mousePositionTile.y << "\n\n"
+			<< "tile map int rect: " << this->tileMap->getTextureIntRect().left << " x " << this->tileMap->getTextureIntRect().top << "\n\n"
+			<< "tile rotation: " << this->tileRotation << "\n\n"
+			<< "door name: " << this->doorName << "\n\n"
+			<< "tile type: " << this->tileType << "\n\n"
 			<< "tile layer: " << this->tileLayer;
 
 		this->cursorText.setString(ss.str());
@@ -239,7 +273,7 @@ void Editor::updateTextureSelector(const float& dt)
 void Editor::updateTileMap()
 {
 	/*Add Tile*/
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->getInputTime())
 	{
 		if (!this->textureSelector->getActive() && !this->sideBar.getGlobalBounds().contains(static_cast<sf::Vector2f>(this->mousePositionWindow)))
 		{
@@ -383,7 +417,11 @@ void Editor::update(const float& dt)
 /*Render Functions*/
 void Editor::renderBackground(sf::RenderTarget& target)
 {
-	target.draw(this->background);
+	target.draw(this->environmentDetails.background);
+}
+void Editor::renderForeground(sf::RenderTarget& target)
+{
+	target.draw(this->environmentDetails.foreground);
 }
 void Editor::renderSideBar(sf::RenderTarget& target)
 {
@@ -415,6 +453,7 @@ void Editor::render(sf::RenderTarget* target)
 	this->renderTexture.setView(this->view);
 	this->renderBackground(this->renderTexture);
 	this->renderTileMap(this->renderTexture);
+	this->renderForeground(this->renderTexture);
 	this->renderSelectorRect(this->renderTexture);
 	this->renderTexture.display();
 	this->renderSprite.setTexture(this->renderTexture.getTexture());

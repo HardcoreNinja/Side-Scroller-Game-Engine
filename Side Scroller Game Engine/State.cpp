@@ -5,7 +5,7 @@
 void State::initVariables(GameDetails* game_details)
 {
 	this->gameDetails = game_details;
-	this->tileSize = 32;
+	this->tileSize = 64;
 	this->endState = false;
 	this->inputTime = 0.f;
 	this->maxInputTime = 100.f;

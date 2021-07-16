@@ -33,6 +33,18 @@ struct GameDetails
 	sf::Font* font;
 };
 
+struct EnvironmentDetails
+{
+	/*Background Variables*/
+	sf::RectangleShape background;
+	sf::Texture backgroundTexture;
+
+	/*Foreground Variables*/
+	sf::RectangleShape foreground;
+	sf::Texture foregroundTexture;
+
+};
+
 class State
 {
 private:
@@ -42,6 +54,9 @@ private:
 protected:
 	/*Game Detials*/
 	GameDetails* gameDetails;
+
+	/*Environoment Details*/
+	EnvironmentDetails environmentDetails;
 
 	/*Tile Map*/
 	std::unique_ptr<TILEMAP::TileMap> tileMap;

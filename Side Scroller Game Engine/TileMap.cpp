@@ -411,15 +411,15 @@ void TILEMAP::TextureSelector::initVariables(
 	this->textureIntRect.height = this->tileSize;
 
 	/*Hide Button*/
-	float hideButtonOffsetX = 16.f;
-	float hideButtonOffsetY = 17.f;
+	float hideButtonOffsetX = this->tileSize / 2.f;
+	float hideButtonOffsetY = this->tileSize / 2.f;
 	this->hideButton = std::make_unique<GUI::Button>(
 		sf::Vector2f(bounds_position.x + hideButtonOffsetX, bounds_position.y + hideButtonOffsetY), //Button Position
-		sf::Vector2f(this->tileSize, this->tileSize),                                             //Button Size
-		font,                                                                                     //Text Font
-		"ts",                                                                                     //String
-		20,                                                                                       //Character Size
-		sf::Color::White, sf::Color::White, sf::Color::White                                      //Text Color (Idle, Hover, Click)
+		sf::Vector2f(this->tileSize, this->tileSize),                                               //Button Size
+		font,                                                                                       //Text Font
+		"ts",                                                                                       //String
+		20,                                                                                         //Character Size
+		sf::Color::White, sf::Color::White, sf::Color::White                                        //Text Color (Idle, Hover, Click)
 		);
 }
 
