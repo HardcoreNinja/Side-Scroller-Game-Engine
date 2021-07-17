@@ -7,8 +7,11 @@
 /*Class Forward Declarations*/
 class State;
 class Settings;
-class GraphicsSettings;
-class Button;
+class Editor;
+class sf::Keyboard;
+class sf::Mouse;
+class sf::Event;
+class GUI::Button;
 class sf::RenderTarget;
 class sf::RectangleShape; 
 class sf::Texture;

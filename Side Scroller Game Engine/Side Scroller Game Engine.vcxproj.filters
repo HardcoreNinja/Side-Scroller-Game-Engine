@@ -64,6 +64,9 @@
     <Filter Include="Resource Files\Config\Tile Map">
       <UniqueIdentifier>{a02d5d73-ea2e-4a58-952b-587dfa1f1414}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Pause Menu">
+      <UniqueIdentifier>{2774aa1c-aceb-4ab5-9f31-6495c893744f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -92,6 +95,9 @@
     </ClInclude>
     <ClInclude Include="Editor.h">
       <Filter>Source Files\States</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseMenu.h">
+      <Filter>Source Files\Pause Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +130,9 @@
     </ClCompile>
     <ClCompile Include="Editor.cpp">
       <Filter>Source Files\States</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseMenu.cpp">
+      <Filter>Source Files\Pause Menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,20 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 #include "State.h"
+
+/*Class Forward Declarations*/
+class State;
+class PauseMenu;
+class GUI::Button;
+class sf::Keyboard;
+class sf::Mouse;
+class sf::Event;
+class sf::RenderTarget;
+class sf::RectangleShape;
+class sf::Text;
+class sf::Texture;
+class sf::Color;
+
 class Editor :
     public State
 {
@@ -31,6 +45,7 @@ private:
 
     /*Initializers*/
     void initVariables();
+    void initPauseMenu();
     void initBackground();
     void initForeground();
     void initRenderTexture();

@@ -5,6 +5,7 @@
 void State::initVariables(GameDetails* game_details)
 {
 	this->gameDetails = game_details;
+	this->pauseGame = false;
 	this->tileSize = 64;
 	this->endState = false;
 	this->inputTime = 0.f;
@@ -43,6 +44,17 @@ bool State::getEndState()
 }
 
 /*Setters*/
+void State::setPauseGame()
+{
+	if (this->pauseGame)
+		this->pauseGame = false;
+	else if (!this->pauseGame)
+		this->pauseGame = true;
+}
+void State::setEndStateTrue()
+{
+	this->endState = true;
+}
 void State::setWindow()
 {
 	auto style = this->gameDetails->graphicsSettings->getFullScreen() ? sf::Style::Fullscreen : sf::Style::Default;
@@ -61,10 +73,6 @@ void State::setStateInitializations()
 {
 	for (auto& i : *this->gameDetails->states)
 		i->setInitializers();
-}
-void State::setEndStateTrue()
-{
-	this->endState = true;
 }
 
 /*Update Functions*/

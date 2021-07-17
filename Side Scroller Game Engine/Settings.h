@@ -2,6 +2,26 @@
 #define SETTINGS_H
 #include "State.h"
 
+/*Class Forward Declarations*/
+class State;
+class GraphicsSettings;
+class sf::Keyboard;
+class sf::Mouse;
+class sf::Event;
+class GUI::Button;
+class GUI::DropDown;
+class sf::VideoMode;
+class sf::RenderTarget;
+class sf::RenderWindow;
+class sf::RectangleShape;
+class sf::Text;
+class sf::Font;
+class sf::Texture;
+class sf::Color;
+class sf::View;
+class sf::Sprite;
+class sf::RenderTexture;
+
 class Settings :
     public State
 {

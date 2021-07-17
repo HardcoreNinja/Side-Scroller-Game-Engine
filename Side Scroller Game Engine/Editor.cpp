@@ -18,6 +18,20 @@ void Editor::initVariables()
 	/*View Variables*/
 	this->cameraSpeed = 1280.f;
 }
+void Editor::initPauseMenu()
+{
+	this->pauseMenu = std::make_unique<PauseMenu>(
+		*this->gameDetails->window,
+		*this->gameDetails->font
+		);
+
+	/*Buttons*/
+	float offsetY = 100.f;
+
+	this->pauseMenu->setButton("Save", -offsetY, "Save");
+	this->pauseMenu->setButton("Load", 0, "Load");
+	this->pauseMenu->setButton("Quit", offsetY * 2, "Quit");
+}
 void Editor::initBackground()
 {
 	this->environmentDetails.background.setSize(
@@ -161,6 +175,7 @@ Editor::Editor(GameDetails* game_details)
 	: State(game_details)
 {
 	this->initVariables();
+	this->initPauseMenu();
 	this->initBackground();
 	this->initForeground();
 	this->initRenderTexture();
@@ -296,122 +311,140 @@ void Editor::updateTileMap()
 void Editor::updateUserInput(const float& dt)
 {
 	/*Back To Main Menu*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Back_To_Main_Menu"])) && this->getInputTime())
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Pause_Menu"])) && this->getInputTime())
+		this->setPauseGame();
+	
+	if (this->pauseGame)
 	{
-		this->tileMap->saveToFile();
-		this->tileSize = 32;
-		this->setEndStateTrue();
-	}
+		if (this->pauseMenu->getButtonClickState("Save"))
+			this->tileMap->saveToFile();
 
-	/*Double Tile Size*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Double_Tile_Size"])) && this->getInputTime())
-	{
-		this->tileSize = this->tileSize * 2;
-		this->tileMap->doubleTileSize();
-		this->textureSelector->doubleSelectorSize();
-		this->tileMap->setTextureIntRect(this->textureSelector->getTextureIntRect());
-		this->selectorRect.setSize(sf::Vector2f(this->textureSelector->getTextureIntRect().width, this->textureSelector->getTextureIntRect().height));
-		this->selectorRect.setTextureRect(this->textureSelector->getTextureIntRect());
-	}
+		if (this->pauseMenu->getButtonClickState("Load"))
+			this->tileMap->loadFromFile();
 
-	/*Halving Tile Size*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Halve_Tile_Size"])) && this->getInputTime())
-	{
-		this->tileSize = this->tileSize / 2;
-		this->tileMap->halveTileSize();
-		this->textureSelector->halveSelectorSize();
-		this->tileMap->setTextureIntRect(this->textureSelector->getTextureIntRect());
-		this->selectorRect.setSize(sf::Vector2f(this->textureSelector->getTextureIntRect().width, this->textureSelector->getTextureIntRect().height));
-		this->selectorRect.setTextureRect(this->textureSelector->getTextureIntRect());
-	}
-
-	/*Camera Controls*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Camera_Up"])))
-		this->view.move(0.f, -this->cameraSpeed * dt);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Camera_Down"])))
-		this->view.move(0.f, this->cameraSpeed * dt);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Camera_Left"])))
-		this->view.move(-this->cameraSpeed * dt, 0.f);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Camera_Right"])))
-		this->view.move(this->cameraSpeed * dt, 0.f);
-
-	/*Update Rotation*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Rotate_Tile"])) && this->getInputTime())
-		this->updateTileRotation();
-
-	/*Update Tile Type*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Tile_Type"])) && this->getInputTime())
-		this->updateTileType();
-
-	/*Update Tile Layer*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Tile_Layer"])) && this->getInputTime())
-		this->updateTileLayer();
-
-	/*Texture Sheet Scroll Up*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Scroll_Up"])) && this->getInputTime())
-		this->textureSelector->scrollUp();
-	else if (this->gameDetails->event->type == sf::Event::MouseWheelScrolled && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Left_Shift"])))
-	{
-		if (this->gameDetails->event->mouseWheelScroll.delta > 0)
+		if (this->pauseMenu->getButtonClickState("Quit"))
 		{
+			this->tileMap->saveToFile();
+			this->tileSize = 64;
+			this->setEndStateTrue();
+		}
+	}
+	else if (!this->pauseGame)
+	{
+		/*Double Tile Size*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Double_Tile_Size"])) && this->getInputTime())
+		{
+			this->tileSize = this->tileSize * 2;
+			this->tileMap->doubleTileSize();
+			this->textureSelector->doubleSelectorSize();
+			this->tileMap->setTextureIntRect(this->textureSelector->getTextureIntRect());
+			this->selectorRect.setSize(sf::Vector2f(this->textureSelector->getTextureIntRect().width, this->textureSelector->getTextureIntRect().height));
+			this->selectorRect.setTextureRect(this->textureSelector->getTextureIntRect());
+		}
+
+		/*Halving Tile Size*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Halve_Tile_Size"])) && this->getInputTime())
+		{
+			this->tileSize = this->tileSize / 2;
+			this->tileMap->halveTileSize();
+			this->textureSelector->halveSelectorSize();
+			this->tileMap->setTextureIntRect(this->textureSelector->getTextureIntRect());
+			this->selectorRect.setSize(sf::Vector2f(this->textureSelector->getTextureIntRect().width, this->textureSelector->getTextureIntRect().height));
+			this->selectorRect.setTextureRect(this->textureSelector->getTextureIntRect());
+		}
+
+		/*Camera Controls*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Camera_Up"])))
+			this->view.move(0.f, -this->cameraSpeed * dt);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Camera_Down"])))
+			this->view.move(0.f, this->cameraSpeed * dt);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Camera_Left"])))
+			this->view.move(-this->cameraSpeed * dt, 0.f);
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Camera_Right"])))
+			this->view.move(this->cameraSpeed * dt, 0.f);
+
+		/*Update Rotation*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Rotate_Tile"])) && this->getInputTime())
+			this->updateTileRotation();
+
+		/*Update Tile Type*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Tile_Type"])) && this->getInputTime())
+			this->updateTileType();
+
+		/*Update Tile Layer*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Tile_Layer"])) && this->getInputTime())
+			this->updateTileLayer();
+
+		/*Texture Sheet Scroll Up*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Scroll_Up"])) && this->getInputTime())
 			this->textureSelector->scrollUp();
-			this->gameDetails->event->mouseWheelScroll.delta = 0;
-		}
-	}
-
-	/*Texture Sheet Scroll Down*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Scroll_Down"])))
-		this->textureSelector->scrollDown();
-	else if (this->gameDetails->event->type == sf::Event::MouseWheelScrolled && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Left_Shift"])))
-	{
-		if (this->gameDetails->event->mouseWheelScroll.delta < 0)
+		else if (this->gameDetails->event->type == sf::Event::MouseWheelScrolled && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Left_Shift"])))
 		{
+			if (this->gameDetails->event->mouseWheelScroll.delta > 0)
+			{
+				this->textureSelector->scrollUp();
+				this->gameDetails->event->mouseWheelScroll.delta = 0;
+			}
+		}
+
+		/*Texture Sheet Scroll Down*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Scroll_Down"])))
 			this->textureSelector->scrollDown();
-			this->gameDetails->event->mouseWheelScroll.delta = 0;
-		}
-	}
-
-	/*Texture Sheet Scroll Left*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Scroll_Left"])))
-		this->textureSelector->scrollLeft();
-	else if (this->gameDetails->event->type == sf::Event::MouseWheelScrolled && sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Left_Shift"])))
-	{
-		if (this->gameDetails->event->mouseWheelScroll.delta < 0)
+		else if (this->gameDetails->event->type == sf::Event::MouseWheelScrolled && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Left_Shift"])))
 		{
+			if (this->gameDetails->event->mouseWheelScroll.delta < 0)
+			{
+				this->textureSelector->scrollDown();
+				this->gameDetails->event->mouseWheelScroll.delta = 0;
+			}
+		}
+
+		/*Texture Sheet Scroll Left*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Scroll_Left"])))
 			this->textureSelector->scrollLeft();
-			this->gameDetails->event->mouseWheelScroll.delta = 0;
+		else if (this->gameDetails->event->type == sf::Event::MouseWheelScrolled && sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Left_Shift"])))
+		{
+			if (this->gameDetails->event->mouseWheelScroll.delta < 0)
+			{
+				this->textureSelector->scrollLeft();
+				this->gameDetails->event->mouseWheelScroll.delta = 0;
+			}
+		}
+
+		/*Texture Sheet Scroll Right*/
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Scroll_Right"])))
+			this->textureSelector->scrollRight();
+		else if (this->gameDetails->event->type == sf::Event::MouseWheelScrolled && sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Left_Shift"])))
+		{
+			if (this->gameDetails->event->mouseWheelScroll.delta > 0)
+			{
+				this->textureSelector->scrollRight();
+				this->gameDetails->event->mouseWheelScroll.delta = 0;
+			}
 		}
 	}
-
-	/*Texture Sheet Scroll Right*/
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Scroll_Right"])))
-		this->textureSelector->scrollRight();
-	else if (this->gameDetails->event->type == sf::Event::MouseWheelScrolled && sf::Keyboard::isKeyPressed(sf::Keyboard::Key(this->keyBindMap["Left_Shift"])))
-	{
-		if (this->gameDetails->event->mouseWheelScroll.delta > 0)
-		{
-			this->textureSelector->scrollRight();
-			this->gameDetails->event->mouseWheelScroll.delta = 0;
-		}
-	}	
 }
 void Editor::update(const float& dt)
 {
 	if (this->gameDetails->event->type == sf::Event::Resized)
 		this->updateResize();
-
 	this->updateMousePosition();
-	this->updateButtonMap();
-	this->updateInputTime(dt); 
-
-	this->updateCursorText();
-	this->updateTextureSelector(dt);
-	this->updateTileMap();
-	this->updateSelectorRect();
+	this->updateInputTime(dt);
 	this->updateUserInput(dt);
+	//this->updateButtonMap();
+	
+	if (this->pauseGame)
+		this->pauseMenu->update(this->mousePositionWindow);
+	else if (!this->pauseGame)
+	{
+		this->updateCursorText();
+		this->updateTextureSelector(dt);
+		this->updateTileMap();
+		this->updateSelectorRect();
+	}
 }
 
 /*Render Functions*/
@@ -464,4 +497,6 @@ void Editor::render(sf::RenderTarget* target)
 	this->renderSideBar(*target);
 	this->renderTextureSelector(*target);
 	this->renderCursorText(*target);
+	if (this->pauseGame)
+		this->pauseMenu->render(*target);
 }

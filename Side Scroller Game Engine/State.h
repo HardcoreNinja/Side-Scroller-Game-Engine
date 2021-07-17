@@ -3,10 +3,14 @@
 #include "GraphicsSettings.h"
 #include "GUI.h"
 #include "TileMap.h"
+#include "PauseMenu.h"
 
 /*Class Forward Declarations*/
 class State;
 class GraphicsSettings;
+class TILEMAP::TileMap;
+class PauseMenu;
+class sf::Font;
 class GUI::Button;
 class GUI::DropDown;
 class sf::RenderTarget;
@@ -57,6 +61,10 @@ protected:
 
 	/*Environoment Details*/
 	EnvironmentDetails environmentDetails;
+
+	/*Pause Menu Variables*/
+	std::unique_ptr<PauseMenu> pauseMenu;
+	bool pauseGame;
 
 	/*Tile Map*/
 	std::unique_ptr<TILEMAP::TileMap> tileMap;
@@ -110,6 +118,7 @@ public:
 	bool getEndState();
 
 	/*Setters*/
+	void setPauseGame();
 	void setEndStateTrue();
 	void setWindow();
 	void setStateInitializations();
